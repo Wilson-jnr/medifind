@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Panel — MediFind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green:       #1D9E75;
+      --green-dark:  #0F6E56;
+      --green-light: #E1F5EE;
+      --green-mid:   #9FE1CB;
+      --green-text:  #085041;
+      --amber-bg:    #FAEEDA;
+      --amber-text:  #854F0B;
+      --red-bg:      #FCEBEB;
+      --red-text:    #A32D2D;
+      --purple-bg:   #EEEDFE;
+      --purple-text: #26215C;
+      --ink:         #1a1a1a;
+      --ink-mid:     #555;
+      --ink-light:   #888;
+      --surface:     #f7f6f2;
+      --card:        #ffffff;
+      --border:      #e5e3dc;
+      --border-mid:  #ccc9c0;
+      --radius:      12px;
+      --radius-sm:   8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; }
+
+    /* ── Nav ── */
+    nav { background: var(--ink); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: #fff; text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-logo span { color: var(--green); }
+    .nav-badge { font-size: 11px; background: var(--green); color: #fff; padding: 3px 8px; border-radius: 99px; font-weight: 500; letter-spacing: 0.04em; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-user { font-size: 13px; color: rgba(255,255,255,0.6); }
+    .nav-logout { font-size: 13px; color: rgba(255,255,255,0.5); background: none; border: 1px solid rgba(255,255,255,0.15); cursor: pointer; padding: 6px 12px; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; transition: all 0.15s; }
+    .nav-logout:hover { background: rgba(255,255,255,0.1); color: #fff; }
+
+    /* ── Login ── */
+    .login-wrap { max-width: 400px; margin: 6rem auto; padding: 0 1.5rem; }
+    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+    .login-icon { width: 44px; height: 44px; background: var(--ink); border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: center; margin-bottom: 1.25rem; }
+    .login-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 0.25rem; }
+    .login-sub { font-size: 13px; color: var(--ink-mid); margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1rem; }
+    .field label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px; }
+    .field input { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); background: var(--card); color: var(--ink); padding: 0 12px; height: 40px; transition: border-color 0.15s; }
+    .field input:focus { outline: none; border-color: var(--ink); }
+    .btn-dark { width: 100%; height: 42px; border-radius: var(--radius-sm); background: var(--ink); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: opacity 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-dark:hover { opacity: 0.85; }
+    .btn-dark:disabled { opacity: 0.5; cursor: not-allowed; }
+    .error-banner { background: var(--red-bg); border: 1px solid #F09595; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--red-text); margin-top: 1rem; display: none; }
+
+    /* ── Admin layout ── */
+    .admin { display: none; max-width: 1000px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+
+    /* Stats */
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 2rem; }
+    .stat { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.125rem; }
+    .stat-label { font-size: 11px; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-val { font-size: 26px; font-weight: 500; color: var(--ink); }
+    .stat-sub { font-size: 12px; color: var(--ink-light); margin-top: 3px; }
+
+    /* Section */
+    .section { margin-bottom: 2.5rem; }
+    .section-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+    .section-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; }
+    .section-count { font-size: 12px; padding: 4px 10px; border-radius: 99px; font-weight: 500; }
+    .count-amber { background: var(--amber-bg); color: var(--amber-text); }
+    .count-green { background: var(--green-light); color: var(--green-text); }
+
+    /* Pharmacy cards */
+    .ph-list { display: flex; flex-direction: column; gap: 10px; }
+    .ph-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.125rem 1.25rem; display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; transition: border-color 0.15s; }
+    .ph-card:hover { border-color: var(--border-mid); }
+    .ph-card.pending { border-left: 3px solid var(--amber-text); }
+    .ph-card.verified { border-left: 3px solid var(--green); }
+    .ph-info { flex: 1; min-width: 0; }
+    .ph-name { font-size: 15px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .ph-detail { font-size: 12px; color: var(--ink-mid); margin-bottom: 2px; display: flex; align-items: center; gap: 5px; flex-wrap: wrap; }
+    .ph-detail svg { flex-shrink: 0; }
+    .ph-meta { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; }
+    .ph-tag { font-size: 11px; padding: 3px 8px; border-radius: 99px; background: var(--surface); color: var(--ink-mid); border: 1px solid var(--border); }
+    .ph-actions { display: flex; gap: 6px; flex-shrink: 0; align-items: flex-start; flex-wrap: wrap; justify-content: flex-end; }
+
+    /* Buttons */
+    .btn-approve { height: 34px; padding: 0 14px; border-radius: var(--radius-sm); background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; transition: background 0.15s; white-space: nowrap; }
+    .btn-approve:hover { background: var(--green-dark); }
+    .btn-reject { height: 34px; padding: 0 14px; border-radius: var(--radius-sm); background: transparent; color: var(--red-text); border: 1px solid #F09595; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .btn-reject:hover { background: var(--red-bg); }
+    .btn-unverify { height: 34px; padding: 0 14px; border-radius: var(--radius-sm); background: transparent; color: var(--ink-mid); border: 1px solid var(--border-mid); font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .btn-unverify:hover { background: var(--surface); }
+    .btn-delete { height: 34px; padding: 0 14px; border-radius: var(--radius-sm); background: transparent; color: var(--red-text); border: 1px solid #F09595; font-family: 'DM Sans', sans-serif; font-size: 13px; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
+    .btn-delete:hover { background: var(--red-bg); }
+
+    /* Empty / loading states */
+    .empty { text-align: center; padding: 2.5rem; color: var(--ink-light); font-size: 13px; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); }
+    .empty svg { display: block; margin: 0 auto 0.75rem; opacity: 0.3; }
+
+    /* Toast */
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: #fff; padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.15); display: none; z-index: 999; }
+    .toast.ok  { background: var(--green-text); }
+    .toast.err { background: var(--red-text); }
+
+    /* Spinner */
+    .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: -3px; margin-right: 4px; }
+    .spinner-dark { border-color: var(--border-mid); border-top-color: var(--ink); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 600px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      .ph-card { flex-direction: column; }
+      .ph-actions { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div style="display:flex;align-items:center;gap:10px">
+    <a class="nav-logo" href="index.html">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+      Medi<span>Find</span>
+    </a>
+    <span class="nav-badge">Admin</span>
+  </div>
+  <div class="nav-right">
+    <span class="nav-user" id="nav-user" style="display:none"></span>
+    <button class="nav-logout" id="btn-logout" onclick="logout()" style="display:none">Log out</button>
+  </div>
+</nav>
+
+<!-- LOGIN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-card">
+    <div class="login-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <p class="login-title">Admin login</p>
+    <p class="login-sub">This page is for MediFind administrators only.</p>
+    <div class="field"><label>Email</label><input type="email" id="l-email" placeholder="admin@medifind.co.zw" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="field"><label>Password</label><input type="password" id="l-pw" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <button class="btn-dark" id="login-btn" onclick="doLogin()">Log in to admin panel</button>
+    <div class="error-banner" id="login-error"></div>
+  </div>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="admin" id="admin-panel">
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total pharmacies</div><div class="stat-val" id="stat-total">—</div><div class="stat-sub">registered</div></div>
+    <div class="stat"><div class="stat-label">Pending approval</div><div class="stat-val" style="color:var(--amber-text)" id="stat-pending">—</div><div class="stat-sub">awaiting review</div></div>
+    <div class="stat"><div class="stat-label">Verified</div><div class="stat-val" style="color:var(--green-text)" id="stat-verified">—</div><div class="stat-sub">live on MediFind</div></div>
+    <div class="stat"><div class="stat-label">Total medicines</div><div class="stat-val" id="stat-medicines">—</div><div class="stat-sub">listed across all pharmacies</div></div>
+  </div>
+
+  <!-- Pending -->
+  <div class="section">
+    <div class="section-head">
+      <p class="section-title">Pending approval</p>
+      <span class="section-count count-amber" id="pending-count">0 pending</span>
+    </div>
+    <div class="ph-list" id="pending-list">
+      <div class="empty"><span class="spinner spinner-dark"></span> Loading…</div>
+    </div>
+  </div>
+
+  <!-- Verified -->
+  <div class="section">
+    <div class="section-head">
+      <p class="section-title">Verified pharmacies</p>
+      <span class="section-count count-green" id="verified-count">0 verified</span>
+    </div>
+    <div class="ph-list" id="verified-list">
+      <div class="empty"><span class="spinner spinner-dark"></span> Loading…</div>
+    </div>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPA_URL = 'https://ultudsxmjvzjfojoyjfu.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
+
+  let session = null;
+
+  async function supaFetch(path, opts = {}) {
+    const headers = {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + (session ? session.access_token : SUPA_KEY),
+      'Content-Type': 'application/json',
+      ...opts.headers
+    };
+    const res = await fetch(SUPA_URL + path, { ...opts, headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || err.error_description || 'Request failed');
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('l-email').value.trim();
+    const pw    = document.getElementById('l-pw').value;
+    const btn   = document.getElementById('login-btn');
+    const err   = document.getElementById('login-error');
+    if (!email || !pw) { showBanner(err, 'Please enter your email and password.'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Logging in…';
+    err.style.display = 'none';
+    try {
+      const data = await supaFetch('/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        body: JSON.stringify({ email, password: pw })
+      });
+      session = data;
+      document.getElementById('nav-user').textContent = email;
+      document.getElementById('nav-user').style.display = 'inline';
+      document.getElementById('btn-logout').style.display = 'inline-block';
+      document.getElementById('login-screen').style.display = 'none';
+      document.getElementById('admin-panel').style.display = 'block';
+      await loadAll();
+    } catch(e) {
+      showBanner(err, 'Login failed. Please check your email and password.');
+      btn.disabled = false;
+      btn.textContent = 'Log in to admin panel';
+    }
+  }
+
+  function logout() {
+    session = null;
+    document.getElementById('login-screen').style.display = 'block';
+    document.getElementById('admin-panel').style.display = 'none';
+    document.getElementById('nav-user').style.display = 'none';
+    document.getElementById('btn-logout').style.display = 'none';
+    document.getElementById('l-pw').value = '';
+    document.getElementById('login-btn').disabled = false;
+    document.getElementById('login-btn').textContent = 'Log in to admin panel';
+  }
+
+  async function loadAll() {
+    try {
+      const [pharmacies, medicines] = await Promise.all([
+        supaFetch('/rest/v1/pharmacies?select=*&order=created_at.desc'),
+        supaFetch('/rest/v1/medicines?select=id,pharmacy_id')
+      ]);
+
+      const pending  = pharmacies.filter(p => !p.is_verified);
+      const verified = pharmacies.filter(p =>  p.is_verified);
+      const medCount = medicines ? medicines.length : 0;
+
+      document.getElementById('stat-total').textContent    = pharmacies.length;
+      document.getElementById('stat-pending').textContent  = pending.length;
+      document.getElementById('stat-verified').textContent = verified.length;
+      document.getElementById('stat-medicines').textContent = medCount;
+      document.getElementById('pending-count').textContent  = pending.length + ' pending';
+      document.getElementById('verified-count').textContent = verified.length + ' verified';
+
+      renderPending(pending, medicines || []);
+      renderVerified(verified, medicines || []);
+    } catch(e) {
+      showToast('Failed to load data: ' + e.message, 'err');
+    }
+  }
+
+  function medCountFor(id, medicines) {
+    return medicines.filter(m => m.pharmacy_id === id).length;
+  }
+
+  function formatDate(ts) {
+    if (!ts) return '—';
+    return new Date(ts).toLocaleDateString('en-ZW', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+
+  function renderPending(list, medicines) {
+    const el = document.getElementById('pending-list');
+    if (!list.length) {
+      el.innerHTML = `<div class="empty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+        No pharmacies waiting for approval — you're all caught up!
+      </div>`;
+      return;
+    }
+    el.innerHTML = list.map(p => `
+      <div class="ph-card pending" id="card-${p.id}">
+        <div class="ph-info">
+          <div class="ph-name">${p.name}</div>
+          <div class="ph-detail">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${p.street ? p.street + ', ' : ''}${p.suburb || ''}, ${p.city || ''}
+            ${p.landmark ? ' · Near ' + p.landmark : ''}
+          </div>
+          <div class="ph-detail">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            ${p.phone || '—'}
+            &nbsp;·&nbsp;
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            ${p.email || '—'}
+          </div>
+          <div class="ph-meta">
+            <span class="ph-tag">Registered ${formatDate(p.created_at)}</span>
+            ${p.offers_delivery ? '<span class="ph-tag">Offers delivery</span>' : ''}
+            ${p.opens_at ? '<span class="ph-tag">Opens ' + p.opens_at.slice(0,5) + ' – ' + (p.closes_at||'').slice(0,5) + '</span>' : ''}
+            ${(p.operating_days||[]).length ? '<span class="ph-tag">' + (p.operating_days||[]).join(', ') + '</span>' : ''}
+          </div>
+        </div>
+        <div class="ph-actions">
+          <button class="btn-approve" onclick="approvePharmacy('${p.id}')">✓ Approve</button>
+          <button class="btn-reject"  onclick="deletePharmacy('${p.id}', '${p.name.replace(/'/g,"\\'")}')">✕ Reject</button>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  function renderVerified(list, medicines) {
+    const el = document.getElementById('verified-list');
+    if (!list.length) {
+      el.innerHTML = `<div class="empty">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        No verified pharmacies yet. Approve some from the pending list above.
+      </div>`;
+      return;
+    }
+    el.innerHTML = list.map(p => {
+      const meds = medCountFor(p.id, medicines);
+      return `
+      <div class="ph-card verified" id="card-${p.id}">
+        <div class="ph-info">
+          <div class="ph-name">${p.name}</div>
+          <div class="ph-detail">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            ${p.suburb || ''}, ${p.city || ''}
+          </div>
+          <div class="ph-detail">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            ${p.phone || '—'} &nbsp;·&nbsp; ${p.email || '—'}
+          </div>
+          <div class="ph-meta">
+            <span class="ph-tag" style="background:var(--green-light);color:var(--green-text);border-color:var(--green-mid)">${meds} medicine${meds===1?'':'s'} listed</span>
+            <span class="ph-tag">Verified ${formatDate(p.created_at)}</span>
+            ${p.offers_delivery ? '<span class="ph-tag">Offers delivery</span>' : ''}
+          </div>
+        </div>
+        <div class="ph-actions">
+          <button class="btn-unverify" onclick="unverifyPharmacy('${p.id}')">Unverify</button>
+          <button class="btn-delete"   onclick="deletePharmacy('${p.id}', '${p.name.replace(/'/g,"\\'")}')">Delete</button>
+        </div>
+      </div>`;
+    }).join('');
+  }
+
+  async function approvePharmacy(id) {
+    try {
+      await supaFetch('/rest/v1/pharmacies?id=eq.' + id, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ is_verified: true })
+      });
+      showToast('Pharmacy approved and now live on MediFind ✓', 'ok');
+      await loadAll();
+    } catch(e) {
+      showToast('Failed: ' + e.message, 'err');
+    }
+  }
+
+  async function unverifyPharmacy(id) {
+    try {
+      await supaFetch('/rest/v1/pharmacies?id=eq.' + id, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ is_verified: false })
+      });
+      showToast('Pharmacy moved back to pending', 'ok');
+      await loadAll();
+    } catch(e) {
+      showToast('Failed: ' + e.message, 'err');
+    }
+  }
+
+  async function deletePharmacy(id, name) {
+    if (!confirm('Permanently delete "' + name + '"? This will also delete all their medicines. This cannot be undone.')) return;
+    try {
+      await supaFetch('/rest/v1/pharmacies?id=eq.' + id, { method: 'DELETE' });
+      showToast(name + ' deleted', 'ok');
+      await loadAll();
+    } catch(e) {
+      showToast('Failed: ' + e.message, 'err');
+    }
+  }
+
+  function showBanner(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+  let toastTimer;
+  function showToast(msg, type = 'ok') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast ' + type;
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3500);
+  }
+</script>
+</body>
+</html>

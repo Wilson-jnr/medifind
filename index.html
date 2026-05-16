@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MediFind — Find Medicine Near You</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green:       #1D9E75;
+      --green-dark:  #0F6E56;
+      --green-light: #E1F5EE;
+      --green-mid:   #9FE1CB;
+      --green-text:  #085041;
+      --amber-bg:    #FAEEDA;
+      --amber-text:  #854F0B;
+      --red-bg:      #FCEBEB;
+      --red-text:    #A32D2D;
+      --ink:         #1a1a1a;
+      --ink-mid:     #555;
+      --ink-light:   #888;
+      --surface:     #f7f6f2;
+      --card:        #ffffff;
+      --border:      #e5e3dc;
+      --border-mid:  #ccc9c0;
+      --radius:      12px;
+      --radius-sm:   8px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* ── Nav ── */
+    nav {
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: 'Fraunces', serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--ink);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo span { color: var(--green); }
+    .nav-logo svg { width: 22px; height: 22px; }
+    .nav-links { display: flex; align-items: center; gap: 8px; }
+    .nav-link {
+      font-size: 14px;
+      color: var(--ink-mid);
+      text-decoration: none;
+      padding: 7px 14px;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s;
+    }
+    .nav-link:hover { background: var(--surface); color: var(--ink); }
+    .nav-btn {
+      font-size: 14px;
+      font-weight: 500;
+      color: #fff;
+      background: var(--green);
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      transition: background 0.15s;
+    }
+    .nav-btn:hover { background: var(--green-dark); }
+
+    /* ── Hero ── */
+    .hero {
+      max-width: 680px;
+      margin: 5rem auto 3rem;
+      padding: 0 1.5rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--green);
+      background: var(--green-light);
+      border: 1px solid var(--green-mid);
+      padding: 4px 12px;
+      border-radius: 99px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .hero h1 {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 500;
+      line-height: 1.2;
+      color: var(--ink);
+      margin-bottom: 1rem;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+    .hero p {
+      font-size: 16px;
+      color: var(--ink-mid);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+    }
+
+    /* ── Search ── */
+    .search-wrap {
+      display: flex;
+      gap: 8px;
+      max-width: 520px;
+      margin: 0 auto 1rem;
+    }
+    .search-wrap input {
+      flex: 1;
+      height: 48px;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      border: 1.5px solid var(--border-mid);
+      background: var(--card);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      color: var(--ink);
+      transition: border-color 0.2s;
+    }
+    .search-wrap input:focus {
+      outline: none;
+      border-color: var(--green);
+    }
+    .search-wrap input::placeholder { color: var(--ink-light); }
+    .search-btn {
+      height: 48px;
+      padding: 0 22px;
+      border-radius: var(--radius-sm);
+      background: var(--green);
+      color: #fff;
+      border: none;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      white-space: nowrap;
+    }
+    .search-btn:hover { background: var(--green-dark); }
+    .search-btn:disabled { background: var(--border-mid); cursor: not-allowed; }
+
+    .pills {
+      display: flex;
+      gap: 6px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 0.75rem;
+    }
+    .pill {
+      font-size: 13px;
+      padding: 5px 12px;
+      border-radius: 99px;
+      border: 1px solid var(--border-mid);
+      color: var(--ink-mid);
+      background: var(--card);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      transition: all 0.15s;
+    }
+    .pill:hover {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-light);
+    }
+
+    /* ── Main layout ── */
+    main {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 0 1.5rem 4rem;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--ink-light);
+      margin-bottom: 0.875rem;
+    }
+
+    /* ── Results grid ── */
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 12px;
+      margin-bottom: 2rem;
+    }
+    .med-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1rem 1.125rem;
+      cursor: default;
+      transition: border-color 0.15s, transform 0.15s;
+      animation: fadeUp 0.3s ease both;
+    }
+    .med-card:hover {
+      border-color: var(--border-mid);
+      transform: translateY(-1px);
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .med-card-top {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .med-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .badge {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 99px;
+      white-space: nowrap;
+      font-weight: 500;
+      flex-shrink: 0;
+    }
+    .badge-in  { background: var(--green-light); color: var(--green-text); }
+    .badge-low { background: var(--amber-bg);    color: var(--amber-text); }
+    .badge-out { background: var(--red-bg);      color: var(--red-text);   }
+    .med-pharmacy {
+      font-size: 12px;
+      color: var(--ink-mid);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .med-meta {
+      font-size: 12px;
+      color: var(--ink-light);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* ── Pharmacy list ── */
+    .pharmacy-list {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .pharmacy-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border);
+      transition: background 0.1s;
+    }
+    .pharmacy-row:last-child { border-bottom: none; }
+    .pharmacy-row:hover { background: var(--surface); }
+    .ph-name { font-size: 14px; font-weight: 500; color: var(--ink); }
+    .ph-addr { font-size: 12px; color: var(--ink-mid); margin-top: 2px; }
+    .ph-count {
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 99px;
+      background: var(--green-light);
+      color: var(--green-text);
+      white-space: nowrap;
+      font-weight: 500;
+    }
+
+    /* ── States ── */
+    .state-box {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: var(--ink-light);
+      font-size: 14px;
+      grid-column: 1 / -1;
+    }
+    .state-box svg { display: block; margin: 0 auto 0.75rem; opacity: 0.4; }
+    .spinner {
+      display: inline-block;
+      width: 20px; height: 20px;
+      border: 2px solid var(--border-mid);
+      border-top-color: var(--green);
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      vertical-align: -5px;
+      margin-right: 6px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center;
+      padding: 2rem;
+      font-size: 12px;
+      color: var(--ink-light);
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a class="nav-logo" href="index.html">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+      Medi<span>Find</span>
+    </a>
+    <div class="nav-links">
+      <a class="nav-link" href="register.html">Register your pharmacy</a>
+      <a class="nav-btn" href="dashboard.html">Pharmacy login</a>
+    </div>
+  </nav>
+
+  <section class="hero">
+    <div class="hero-eyebrow">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      Real-time stock availability
+    </div>
+    <h1>Find your medicine <em>before</em> you leave home</h1>
+    <p>Search medicines and see which pharmacies near you have them in stock right now — updated by pharmacies in real time.</p>
+
+    <div class="search-wrap">
+      <input type="text" id="search-input" placeholder="Search by medicine name e.g. Paracetamol…" onkeydown="if(event.key==='Enter') doSearch()" />
+      <button class="search-btn" id="search-btn" onclick="doSearch()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Search
+      </button>
+    </div>
+    <div class="pills">
+      <button class="pill" onclick="quickSearch('Paracetamol')">Paracetamol</button>
+      <button class="pill" onclick="quickSearch('Amoxicillin')">Amoxicillin</button>
+      <button class="pill" onclick="quickSearch('Metformin')">Metformin</button>
+      <button class="pill" onclick="quickSearch('Ibuprofen')">Ibuprofen</button>
+      <button class="pill" onclick="quickSearch('Cotrimoxazole')">Cotrimoxazole</button>
+    </div>
+  </section>
+
+  <main>
+    <div id="results-section" style="display:none">
+      <p class="section-label" id="results-label">Results</p>
+      <div class="results-grid" id="results-grid"></div>
+    </div>
+
+    <div id="default-section">
+      <p class="section-label">Registered pharmacies</p>
+      <div class="pharmacy-list" id="pharmacy-list">
+        <div class="pharmacy-row">
+          <div><span class="spinner"></span> Loading pharmacies…</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <p>Stock data is updated by pharmacies in real time. Always confirm availability before visiting.</p>
+    <p style="margin-top:6px">© 2025 MediFind Zimbabwe</p>
+  </footer>
+
+  <script>
+    const SUPA_URL = 'https://ultudsxmjvzjfojoyjfu.supabase.co';
+    const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
+
+    let userLat = null;
+    let userLng = null;
+
+    // Ask for location silently on page load
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        pos => { userLat = pos.coords.latitude; userLng = pos.coords.longitude; loadPharmacies(); },
+        ()  => { loadPharmacies(); } // location denied — load anyway without distances
+      );
+    } else {
+      loadPharmacies();
+    }
+
+    async function supaFetch(path) {
+      const res = await fetch(SUPA_URL + '/rest/v1/' + path, {
+        headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+      });
+      if (!res.ok) throw new Error((await res.json()).message);
+      return res.json();
+    }
+
+    function getStatus(qty) {
+      if (qty === 0)  return { cls: 'badge-out', label: 'Out of stock' };
+      if (qty <= 15)  return { cls: 'badge-low', label: 'Low stock' };
+      return { cls: 'badge-in', label: 'In stock' };
+    }
+
+    function timeAgo(ts) {
+      const mins = Math.round((Date.now() - new Date(ts).getTime()) / 60000);
+      if (mins < 1)   return 'just now';
+      if (mins < 60)  return mins + 'm ago';
+      const hrs = Math.round(mins / 60);
+      if (hrs < 24)   return hrs + 'h ago';
+      return Math.round(hrs / 24) + 'd ago';
+    }
+
+    // Haversine formula — calculates straight-line distance between two GPS points
+    function getDistanceKm(lat1, lng1, lat2, lng2) {
+      const R = 6371; // Earth radius in km
+      const dLat = (lat2 - lat1) * Math.PI / 180;
+      const dLng = (lng2 - lng1) * Math.PI / 180;
+      const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+                Math.sin(dLng/2) * Math.sin(dLng/2);
+      return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+    }
+
+    function formatDist(km) {
+      if (km < 1) return Math.round(km * 1000) + ' m away';
+      return km.toFixed(1) + ' km away';
+    }
+
+    async function loadPharmacies() {
+      const list = document.getElementById('pharmacy-list');
+      try {
+        const data = await supaFetch('pharmacies?select=id,name,suburb,city,latitude,longitude&is_verified=eq.true&order=name');
+        if (!data.length) {
+          list.innerHTML = '<div class="pharmacy-row"><div style="color:#888">No pharmacies registered yet.</div></div>';
+          return;
+        }
+
+        const counts = await Promise.all(
+          data.map(p => supaFetch('medicines?select=id&pharmacy_id=eq.' + p.id)
+            .then(r => r.length).catch(() => 0))
+        );
+
+        // Calculate distances and sort by nearest if we have location
+        let pharmacies = data.map((p, i) => {
+          let dist = null;
+          if (userLat !== null && p.latitude && p.longitude) {
+            dist = getDistanceKm(userLat, userLng, parseFloat(p.latitude), parseFloat(p.longitude));
+          }
+          return { ...p, dist, count: counts[i] };
+        });
+
+        if (userLat !== null) {
+          pharmacies.sort((a, b) => {
+            if (a.dist === null) return 1;
+            if (b.dist === null) return -1;
+            return a.dist - b.dist;
+          });
+        }
+
+        list.innerHTML = pharmacies.map(p => `
+          <div class="pharmacy-row">
+            <div>
+              <div class="ph-name">${p.name}</div>
+              <div class="ph-addr">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-1px;margin-right:3px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                ${p.suburb}, ${p.city}
+                ${p.dist !== null ? '&nbsp;·&nbsp;<strong>' + formatDist(p.dist) + '</strong>' : ''}
+              </div>
+            </div>
+            <span class="ph-count">${p.count} medicine${p.count === 1 ? '' : 's'}</span>
+          </div>
+        `).join('');
+      } catch(e) {
+        list.innerHTML = '<div class="pharmacy-row"><div style="color:#A32D2D">Could not load pharmacies: ' + e.message + '</div></div>';
+      }
+    }
+
+    async function doSearch() {
+      const q = document.getElementById('search-input').value.trim();
+      if (!q) return;
+      const btn = document.getElementById('search-btn');
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>';
+      document.getElementById('results-label').textContent = 'Results for "' + q + '"';
+      document.getElementById('results-section').style.display = 'block';
+      document.getElementById('default-section').style.display = 'none';
+      const grid = document.getElementById('results-grid');
+      grid.innerHTML = '<div class="state-box"><span class="spinner"></span> Searching…</div>';
+      try {
+        const medicines = await supaFetch(
+          'medicines?select=name,quantity,price_usd,updated_at,pharmacies(name,suburb,city,latitude,longitude)' +
+          '&name=ilike.*' + encodeURIComponent(q) + '*&pharmacies.is_verified=eq.true&order=quantity.desc'
+        );
+        btn.disabled = false;
+        btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search';
+
+        if (!medicines.length) {
+          grid.innerHTML = `<div class="state-box">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            No results found for "<strong>${q}</strong>".<br>Try a different name or spelling.
+          </div>`;
+          return;
+        }
+
+        // Add distances to search results and sort by nearest in-stock first
+        let results = medicines.map(m => {
+          const ph = m.pharmacies || {};
+          let dist = null;
+          if (userLat !== null && ph.latitude && ph.longitude) {
+            dist = getDistanceKm(userLat, userLng, parseFloat(ph.latitude), parseFloat(ph.longitude));
+          }
+          return { ...m, ph, dist };
+        });
+
+        // Sort: in-stock nearest first, then low stock, then out of stock
+        results.sort((a, b) => {
+          const statusOrder = { 'in': 0, 'low': 1, 'out': 2 };
+          const aStatus = getStatus(a.quantity || 0).cls === 'badge-in' ? 'in' : getStatus(a.quantity || 0).cls === 'badge-low' ? 'low' : 'out';
+          const bStatus = getStatus(b.quantity || 0).cls === 'badge-in' ? 'in' : getStatus(b.quantity || 0).cls === 'badge-low' ? 'low' : 'out';
+          if (statusOrder[aStatus] !== statusOrder[bStatus]) return statusOrder[aStatus] - statusOrder[bStatus];
+          if (a.dist !== null && b.dist !== null) return a.dist - b.dist;
+          return 0;
+        });
+
+        grid.innerHTML = results.map((m, i) => {
+          const st = getStatus(m.quantity || 0);
+          const ph = m.ph;
+          return `<div class="med-card" style="animation-delay:${i * 0.04}s">
+            <div class="med-card-top">
+              <div class="med-name">${m.name}</div>
+              <span class="badge ${st.cls}">${st.label}</span>
+            </div>
+            <div class="med-pharmacy">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+              ${ph.name || '—'}
+            </div>
+            <div class="med-meta">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${ph.suburb ? ph.suburb + ', ' + ph.city : '—'}
+              ${m.dist !== null ? '&nbsp;·&nbsp;<strong>' + formatDist(m.dist) + '</strong>' : ''}
+              &nbsp;·&nbsp;
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+              ${timeAgo(m.updated_at)}
+              ${m.price_usd ? '&nbsp;·&nbsp; $' + parseFloat(m.price_usd).toFixed(2) : ''}
+            </div>
+          </div>`;
+        }).join('');
+      } catch(e) {
+        btn.disabled = false;
+        btn.innerHTML = 'Search';
+        grid.innerHTML = '<div class="state-box" style="color:#A32D2D">Search failed: ' + e.message + '</div>';
+      }
+    }
+
+    function quickSearch(name) {
+      document.getElementById('search-input').value = name;
+      doSearch();
+    }
+  </script>
+</body>
+</html>

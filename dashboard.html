@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — MediFind</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green:       #1D9E75;
+      --green-dark:  #0F6E56;
+      --green-light: #E1F5EE;
+      --green-mid:   #9FE1CB;
+      --green-text:  #085041;
+      --amber-bg:    #FAEEDA;
+      --amber-text:  #854F0B;
+      --red-bg:      #FCEBEB;
+      --red-text:    #A32D2D;
+      --ink:         #1a1a1a;
+      --ink-mid:     #555;
+      --ink-light:   #888;
+      --surface:     #f7f6f2;
+      --card:        #ffffff;
+      --border:      #e5e3dc;
+      --border-mid:  #ccc9c0;
+      --radius:      12px;
+      --radius-sm:   8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; }
+
+    nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-logo span { color: var(--green); }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
+    .nav-pharmacy { font-size: 13px; color: var(--ink-mid); }
+    .nav-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--green-light); color: var(--green-text); font-size: 13px; font-weight: 500; display: flex; align-items: center; justify-content: center; }
+    .nav-logout { font-size: 13px; color: var(--ink-light); background: none; border: none; cursor: pointer; padding: 6px 10px; border-radius: var(--radius-sm); font-family: 'DM Sans', sans-serif; }
+    .nav-logout:hover { background: var(--surface); color: var(--ink); }
+
+    /* Login */
+    .login-wrap { max-width: 400px; margin: 5rem auto; padding: 0 1.5rem; }
+    .login-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; }
+    .login-title { font-family: 'Fraunces', serif; font-size: 22px; font-weight: 500; margin-bottom: 0.25rem; }
+    .login-sub { font-size: 13px; color: var(--ink-mid); margin-bottom: 1.5rem; }
+    .field { margin-bottom: 1rem; }
+    .field label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px; }
+    .field input, .field select { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); background: var(--card); color: var(--ink); padding: 0 12px; height: 40px; transition: border-color 0.15s; }
+    .field input:focus, .field select:focus { outline: none; border-color: var(--green); }
+    .btn-green { width: 100%; height: 42px; border-radius: var(--radius-sm); background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-green:hover { background: var(--green-dark); }
+    .btn-green:disabled { background: var(--border-mid); cursor: not-allowed; }
+    .login-footer { margin-top: 1.25rem; text-align: center; font-size: 13px; color: var(--ink-mid); }
+    .login-footer a { color: var(--green); text-decoration: none; }
+    .error-banner { background: var(--red-bg); border: 1px solid #F09595; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--red-text); margin-top: 1rem; display: none; }
+
+    /* Dashboard */
+    .dashboard { display: none; max-width: 960px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 1.75rem; }
+    .stat { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.125rem; }
+    .stat-label { font-size: 11px; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .stat-val { font-size: 26px; font-weight: 500; }
+    .stat-sub { font-size: 12px; color: var(--ink-light); margin-top: 3px; }
+    .stat-val.green { color: var(--green-text); }
+    .stat-val.amber { color: var(--amber-text); }
+    .stat-val.red   { color: var(--red-text); }
+
+    .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--green-text); color: #fff; padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.15); display: none; z-index: 999; }
+    .toast.err { background: var(--red-text); }
+
+    .toolbar { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; align-items: center; }
+    .toolbar input, .toolbar select { height: 36px; padding: 0 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-mid); background: var(--card); font-family: 'DM Sans', sans-serif; font-size: 13px; color: var(--ink); }
+    .toolbar input { flex: 1; min-width: 160px; }
+    .toolbar input:focus, .toolbar select:focus { outline: none; border-color: var(--green); }
+    .btn-add { height: 36px; padding: 0 16px; border-radius: var(--radius-sm); background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; white-space: nowrap; margin-left: auto; transition: background 0.15s; }
+    .btn-add:hover { background: var(--green-dark); }
+
+    .table-wrap { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; margin-bottom: 1rem; }
+    table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    thead th { font-size: 11px; font-weight: 500; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.06em; padding: 10px 14px; background: var(--surface); border-bottom: 1px solid var(--border); text-align: left; }
+    tbody td { padding: 11px 14px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--ink); vertical-align: middle; }
+    tbody tr:last-child td { border-bottom: none; }
+    tbody tr:hover td { background: #fafaf8; }
+
+    .badge { font-size: 11px; padding: 3px 9px; border-radius: 99px; white-space: nowrap; font-weight: 500; }
+    .badge-in  { background: var(--green-light); color: var(--green-text); }
+    .badge-low { background: var(--amber-bg);    color: var(--amber-text); }
+    .badge-out { background: var(--red-bg);      color: var(--red-text);   }
+
+    .qty-row { display: flex; align-items: center; gap: 6px; }
+    .qty-btn { width: 24px; height: 24px; border-radius: 4px; border: 1px solid var(--border-mid); background: transparent; cursor: pointer; font-size: 15px; color: var(--ink-mid); display: flex; align-items: center; justify-content: center; transition: background 0.1s; }
+    .qty-btn:hover { background: var(--surface); }
+    .qty-val { font-size: 13px; font-weight: 500; min-width: 32px; text-align: center; }
+
+    .action-btn { background: transparent; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); padding: 4px 10px; font-size: 12px; color: var(--ink-mid); cursor: pointer; font-family: 'DM Sans', sans-serif; transition: all 0.1s; }
+    .action-btn:hover { background: var(--surface); }
+    .action-del { color: var(--red-text); border-color: #F09595; }
+    .action-del:hover { background: var(--red-bg); }
+
+    .empty-row { text-align: center; padding: 3rem 1rem; color: var(--ink-light); font-size: 13px; }
+    .meta-note { font-size: 12px; color: var(--ink-light); }
+
+    /* Modal */
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 200; padding: 1rem; }
+    .modal-bg.open { display: flex; }
+    .modal { background: var(--card); border-radius: var(--radius); border: 1px solid var(--border); padding: 1.75rem; width: 100%; max-width: 400px; }
+    .modal-title { font-family: 'Fraunces', serif; font-size: 18px; font-weight: 500; margin-bottom: 1.25rem; }
+    .modal-btns { display: flex; gap: 8px; margin-top: 1.5rem; }
+    .btn-cancel { flex: 1; height: 40px; border-radius: var(--radius-sm); border: 1px solid var(--border-mid); background: transparent; color: var(--ink-mid); font-family: 'DM Sans', sans-serif; font-size: 14px; cursor: pointer; }
+    .btn-cancel:hover { background: var(--surface); }
+    .btn-save { flex: 1; height: 40px; border-radius: var(--radius-sm); background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; }
+    .btn-save:hover { background: var(--green-dark); }
+    .btn-save:disabled { background: var(--border-mid); cursor: not-allowed; }
+
+    .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: -3px; margin-right: 4px; }
+    .spinner-dark { border-color: var(--border-mid); border-top-color: var(--green); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    @media (max-width: 640px) {
+      .stats { grid-template-columns: 1fr 1fr; }
+      thead th:nth-child(2), tbody td:nth-child(2) { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+    Medi<span>Find</span>
+  </a>
+  <div class="nav-right">
+    <span class="nav-pharmacy" id="nav-pharmacy-name" style="display:none"></span>
+    <div class="nav-avatar" id="nav-avatar" style="display:none"></div>
+    <button class="nav-logout" id="btn-logout" onclick="logout()" style="display:none">Log out</button>
+  </div>
+</nav>
+
+<!-- LOGIN SCREEN -->
+<div class="login-wrap" id="login-screen">
+  <div class="login-card">
+    <p class="login-title">Pharmacy login</p>
+    <p class="login-sub">Log in to manage your medicine stock on MediFind.</p>
+    <div class="field"><label>Email address</label><input type="email" id="l-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <div class="field"><label>Password</label><input type="password" id="l-pw" placeholder="Your password" onkeydown="if(event.key==='Enter')doLogin()" /></div>
+    <button class="btn-green" id="login-btn" onclick="doLogin()">Log in</button>
+    <div class="error-banner" id="login-error"></div>
+    <p class="login-footer">No account yet? <a href="register.html">Register your pharmacy →</a></p>
+  </div>
+</div>
+
+<!-- DASHBOARD SCREEN -->
+<div class="dashboard" id="dashboard">
+  <div class="stats">
+    <div class="stat"><div class="stat-label">Total medicines</div><div class="stat-val" id="stat-total">—</div><div class="stat-sub">listed on MediFind</div></div>
+    <div class="stat"><div class="stat-label">In stock</div><div class="stat-val green" id="stat-in">—</div><div class="stat-sub">available now</div></div>
+    <div class="stat"><div class="stat-label">Low stock</div><div class="stat-val amber" id="stat-low">—</div><div class="stat-sub">needs restocking</div></div>
+    <div class="stat"><div class="stat-label">Out of stock</div><div class="stat-val red" id="stat-out">—</div><div class="stat-sub">not available</div></div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="db-search" placeholder="Search medicines…" oninput="renderTable()" />
+    <select id="db-filter-status" onchange="renderTable()">
+      <option value="">All statuses</option>
+      <option value="in">In stock</option>
+      <option value="low">Low stock</option>
+      <option value="out">Out of stock</option>
+    </select>
+    <select id="db-filter-cat" onchange="renderTable()">
+      <option value="">All categories</option>
+      <option>Analgesics</option><option>Antibiotics</option><option>Antidiabetics</option>
+      <option>Antihypertensives</option><option>Antihistamines</option><option>Antimalarials</option>
+      <option>Vitamins &amp; supplements</option><option>Other</option>
+    </select>
+    <button class="btn-add" onclick="openModal(null)">+ Add medicine</button>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:30%">Medicine</th>
+          <th style="width:16%">Category</th>
+          <th style="width:14%">Status</th>
+          <th style="width:18%">Quantity</th>
+          <th style="width:11%">Price (USD)</th>
+          <th style="width:11%">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="db-tbody">
+        <tr><td colspan="6"><div class="empty-row"><span class="spinner spinner-dark"></span> Loading…</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="meta-note">Changes are saved instantly and visible to patients straight away.</p>
+</div>
+
+<!-- ADD / EDIT MODAL -->
+<div class="modal-bg" id="modal-bg">
+  <div class="modal">
+    <p class="modal-title" id="modal-title">Add medicine</p>
+    <div class="field"><label>Medicine name</label><input type="text" id="m-name" placeholder="e.g. Paracetamol 500mg" /></div>
+    <div class="field"><label>Category</label>
+      <select id="m-cat">
+        <option value="">Select category…</option>
+        <option>Analgesics</option><option>Antibiotics</option><option>Antidiabetics</option>
+        <option>Antihypertensives</option><option>Antihistamines</option><option>Antimalarials</option>
+        <option>Vitamins &amp; supplements</option><option>Other</option>
+      </select>
+    </div>
+    <div class="field"><label>Quantity in stock</label><input type="number" id="m-qty" placeholder="0" min="0" /></div>
+    <div class="field"><label>Price (USD)</label><input type="number" id="m-price" placeholder="0.00" min="0" step="0.01" /></div>
+    <div class="error-banner" id="modal-error"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" id="btn-save" onclick="saveMedicine()">Save</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  const SUPA_URL = 'https://ultudsxmjvzjfojoyjfu.supabase.co';
+  const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
+
+  let session    = null;
+  let pharmacyId = null;
+  let medicines  = [];
+  let editingId  = null;
+
+  async function supaFetch(path, opts = {}) {
+    const headers = {
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + (session ? session.access_token : SUPA_KEY),
+      'Content-Type': 'application/json',
+      ...opts.headers
+    };
+    const res = await fetch(SUPA_URL + path, { ...opts, headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(err.message || err.error_description || 'Request failed');
+    }
+    const text = await res.text();
+    return text ? JSON.parse(text) : null;
+  }
+
+  async function doLogin() {
+    const email = document.getElementById('l-email').value.trim();
+    const pw    = document.getElementById('l-pw').value;
+    const btn   = document.getElementById('login-btn');
+    const err   = document.getElementById('login-error');
+    if (!email || !pw) { showBanner(err, 'Please enter your email and password.'); return; }
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span> Logging in…';
+    err.style.display = 'none';
+    try {
+      const data = await supaFetch('/auth/v1/token?grant_type=password', {
+        method: 'POST',
+        body: JSON.stringify({ email, password: pw })
+      });
+      session = data;
+      await loadDashboard(email);
+    } catch(e) {
+      showBanner(err, 'Login failed. Please check your email and password.');
+      btn.disabled = false;
+      btn.textContent = 'Log in';
+    }
+  }
+
+  function logout() {
+    session = null; pharmacyId = null; medicines = [];
+    document.getElementById('login-screen').style.display = 'block';
+    document.getElementById('dashboard').style.display = 'none';
+    document.getElementById('nav-pharmacy-name').style.display = 'none';
+    document.getElementById('nav-avatar').style.display = 'none';
+    document.getElementById('btn-logout').style.display = 'none';
+    document.getElementById('l-pw').value = '';
+    document.getElementById('login-btn').disabled = false;
+    document.getElementById('login-btn').textContent = 'Log in';
+  }
+
+  async function loadDashboard(email) {
+    let pharmacyName = 'Your Pharmacy';
+    let userName     = email.split('@')[0];
+    try {
+      const pharms = await supaFetch('/rest/v1/pharmacies?select=id,name&email=eq.' + encodeURIComponent(email));
+      if (pharms && pharms.length > 0) {
+        pharmacyId   = pharms[0].id;
+        pharmacyName = pharms[0].name;
+      }
+    } catch(e) { /* continue without pharmacy link */ }
+
+    document.getElementById('nav-pharmacy-name').textContent = pharmacyName;
+    document.getElementById('nav-pharmacy-name').style.display = 'inline';
+    document.getElementById('nav-avatar').textContent = userName.charAt(0).toUpperCase();
+    document.getElementById('nav-avatar').style.display = 'flex';
+    document.getElementById('btn-logout').style.display = 'inline-block';
+    document.getElementById('login-screen').style.display = 'none';
+    document.getElementById('dashboard').style.display = 'block';
+    await loadMedicines();
+  }
+
+  async function loadMedicines() {
+    try {
+      const path = pharmacyId
+        ? '/rest/v1/medicines?select=*&pharmacy_id=eq.' + pharmacyId + '&order=name'
+        : '/rest/v1/medicines?select=*&order=name';
+      medicines = await supaFetch(path) || [];
+      renderTable();
+    } catch(e) {
+      showToast('Failed to load medicines: ' + e.message, true);
+    }
+  }
+
+  function getStatus(qty) {
+    if (qty === 0)  return { cls: 'badge-out', label: 'Out of stock', key: 'out' };
+    if (qty <= 15)  return { cls: 'badge-low', label: 'Low stock',    key: 'low' };
+    return { cls: 'badge-in', label: 'In stock', key: 'in' };
+  }
+
+  function renderTable() {
+    const q  = document.getElementById('db-search').value.toLowerCase();
+    const sf = document.getElementById('db-filter-status').value;
+    const cf = document.getElementById('db-filter-cat').value;
+    const filtered = medicines.filter(m => {
+      if (q && !m.name.toLowerCase().includes(q) && !(m.category||'').toLowerCase().includes(q)) return false;
+      if (sf && getStatus(m.quantity || 0).key !== sf) return false;
+      if (cf && m.category !== cf) return false;
+      return true;
+    });
+
+    document.getElementById('stat-total').textContent = medicines.length;
+    document.getElementById('stat-in').textContent    = medicines.filter(m => getStatus(m.quantity||0).key === 'in').length;
+    document.getElementById('stat-low').textContent   = medicines.filter(m => getStatus(m.quantity||0).key === 'low').length;
+    document.getElementById('stat-out').textContent   = medicines.filter(m => getStatus(m.quantity||0).key === 'out').length;
+
+    const tbody = document.getElementById('db-tbody');
+    if (!filtered.length) {
+      tbody.innerHTML = '<tr><td colspan="6"><div class="empty-row">No medicines found.<br><small>Click "+ Add medicine" to add your first one.</small></div></td></tr>';
+      return;
+    }
+    tbody.innerHTML = filtered.map(m => {
+      const st = getStatus(m.quantity || 0);
+      return `<tr>
+        <td style="font-weight:500">${m.name}</td>
+        <td style="color:var(--ink-mid)">${m.category || '—'}</td>
+        <td><span class="badge ${st.cls}">${st.label}</span></td>
+        <td>
+          <div class="qty-row">
+            <button class="qty-btn" onclick="changeQty('${m.id}',-1)">−</button>
+            <span class="qty-val">${m.quantity || 0}</span>
+            <button class="qty-btn" onclick="changeQty('${m.id}',1)">+</button>
+          </div>
+        </td>
+        <td style="color:var(--ink-mid)">${m.price_usd ? '$' + parseFloat(m.price_usd).toFixed(2) : '—'}</td>
+        <td style="display:flex;gap:5px;flex-wrap:wrap">
+          <button class="action-btn" onclick="openModal('${m.id}')">Edit</button>
+          <button class="action-btn action-del" onclick="deleteMedicine('${m.id}')">Delete</button>
+        </td>
+      </tr>`;
+    }).join('');
+  }
+
+  async function changeQty(id, delta) {
+    const m = medicines.find(x => x.id === id);
+    if (!m) return;
+    m.quantity = Math.max(0, (m.quantity || 0) + delta);
+    renderTable();
+    try {
+      await supaFetch('/rest/v1/medicines?id=eq.' + id, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ quantity: m.quantity, updated_at: new Date().toISOString() })
+      });
+      showToast(m.name + ' updated to ' + m.quantity + ' units');
+    } catch(e) { showToast('Save failed: ' + e.message, true); }
+  }
+
+  async function deleteMedicine(id) {
+    const m = medicines.find(x => x.id === id);
+    if (!m || !confirm('Delete "' + m.name + '"? This cannot be undone.')) return;
+    medicines = medicines.filter(x => x.id !== id);
+    renderTable();
+    try {
+      await supaFetch('/rest/v1/medicines?id=eq.' + id, { method: 'DELETE' });
+      showToast(m.name + ' removed');
+    } catch(e) {
+      medicines.push(m);
+      renderTable();
+      showToast('Delete failed: ' + e.message, true);
+    }
+  }
+
+  function openModal(id) {
+    editingId = id;
+    const m = id ? medicines.find(x => x.id === id) : null;
+    document.getElementById('modal-title').textContent = m ? 'Edit medicine' : 'Add medicine';
+    document.getElementById('m-name').value  = m ? m.name : '';
+    document.getElementById('m-cat').value   = m ? (m.category || '') : '';
+    document.getElementById('m-qty').value   = m ? (m.quantity || 0) : '';
+    document.getElementById('m-price').value = m && m.price_usd ? parseFloat(m.price_usd).toFixed(2) : '';
+    document.getElementById('modal-error').style.display = 'none';
+    document.getElementById('modal-bg').classList.add('open');
+    setTimeout(() => document.getElementById('m-name').focus(), 50);
+  }
+
+  function closeModal() {
+    document.getElementById('modal-bg').classList.remove('open');
+    editingId = null;
+  }
+
+  async function saveMedicine() {
+    const name  = document.getElementById('m-name').value.trim();
+    const cat   = document.getElementById('m-cat').value;
+    const qty   = parseInt(document.getElementById('m-qty').value) || 0;
+    const price = parseFloat(document.getElementById('m-price').value) || null;
+    const err   = document.getElementById('modal-error');
+    if (!name || !cat) { showBanner(err, 'Please fill in the name and category.'); return; }
+
+    const btn = document.getElementById('btn-save');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner"></span>';
+    err.style.display = 'none';
+
+    const payload = { name, category: cat, quantity: qty, price_usd: price, updated_at: new Date().toISOString() };
+
+    try {
+      if (editingId) {
+        await supaFetch('/rest/v1/medicines?id=eq.' + editingId, {
+          method: 'PATCH',
+          headers: { 'Prefer': 'return=minimal' },
+          body: JSON.stringify(payload)
+        });
+        const idx = medicines.findIndex(x => x.id === editingId);
+        if (idx > -1) medicines[idx] = { ...medicines[idx], ...payload };
+        showToast(name + ' updated');
+      } else {
+        if (!pharmacyId) throw new Error('No pharmacy found for your account. Contact support.');
+        const result = await supaFetch('/rest/v1/medicines', {
+          method: 'POST',
+          headers: { 'Prefer': 'return=representation' },
+          body: JSON.stringify({ ...payload, pharmacy_id: pharmacyId })
+        });
+        if (result && result[0]) medicines.push(result[0]);
+        showToast(name + ' added');
+      }
+      closeModal();
+      renderTable();
+    } catch(e) {
+      showBanner(err, 'Save failed: ' + e.message);
+    }
+    btn.disabled = false;
+    btn.textContent = 'Save';
+  }
+
+  function showBanner(el, msg) { el.textContent = msg; el.style.display = 'block'; }
+
+  let toastTimer;
+  function showToast(msg, isErr = false) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast' + (isErr ? ' err' : '');
+    t.style.display = 'block';
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { t.style.display = 'none'; }, 3000);
+  }
+
+  document.getElementById('modal-bg').addEventListener('click', function(e) {
+    if (e.target === this) closeModal();
+  });
+</script>
+</body>
+</html>
