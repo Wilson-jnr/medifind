@@ -6,6 +6,7 @@
   <title>Register Your Pharmacy — MediFind</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
   <style>
     :root {
       --green:       #1D9E75;
@@ -98,6 +99,14 @@
     .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: -3px; margin-right: 4px; }
     @keyframes spin { to { transform: rotate(360deg); } }
     .error-banner { background: var(--red-bg); border: 1px solid #F09595; border-radius: var(--radius-sm); padding: 10px 14px; font-size: 13px; color: var(--red-text); margin-top: 1rem; display: none; }
+
+    /* Map picker */
+    .map-wrap { border: 1px solid var(--border-mid); border-radius: var(--radius-sm); overflow: hidden; margin-top: 0.75rem; }
+    #map { height: 220px; width: 100%; }
+    .map-coords { font-size: 12px; color: var(--ink-mid); margin-top: 6px; display: flex; align-items: center; gap: 6px; }
+    .map-coords.set { color: var(--green-text); }
+    .btn-locate { height: 34px; padding: 0 14px; border-radius: var(--radius-sm); background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; align-items: center; gap: 6px; margin-top: 0.75rem; transition: background 0.15s; }
+    .btn-locate:hover { background: var(--green-dark); }
   </style>
 </head>
 <body>
@@ -135,7 +144,7 @@
       <!-- Step 2 -->
       <div class="form-section" id="sec-2">
         <p class="form-section-title">Where are you located?</p>
-        <p class="form-section-sub">Patients use this to find pharmacies near them.</p>
+        <p class="form-section-sub">Patients use this to find pharmacies near them. Pin your exact location on the map.</p>
         <div class="field"><label>Street address <span class="req">*</span></label><input type="text" id="f-street" placeholder="e.g. 14 Borrowdale Road" /><div class="field-error" id="e-street">Please enter your street address.</div></div>
         <div class="field-row">
           <div class="field"><label>Suburb <span class="req">*</span></label><input type="text" id="f-suburb" placeholder="e.g. Borrowdale" /><div class="field-error" id="e-suburb">Required.</div></div>
@@ -150,6 +159,23 @@
           </div>
         </div>
         <div class="field"><label>Nearest landmark <span class="opt">(optional)</span></label><input type="text" id="f-landmark" placeholder="e.g. Next to Bon Marché supermarket" /><div class="field-hint">Helps patients find you easily.</div></div>
+
+        <div class="field">
+          <label>Pin your location on the map <span class="req">*</span></label>
+          <div class="field-hint" style="margin-bottom:6px">Click "Use my location" to find you automatically, or click anywhere on the map to drop a pin. Drag the pin to adjust.</div>
+          <button type="button" class="btn-locate" onclick="useMyLocation()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 2a7 7 0 0 1 7 7c0 5-7 13-7 13S5 14 5 9a7 7 0 0 1 7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+            Use my location
+          </button>
+          <div class="map-wrap">
+            <div id="map"></div>
+          </div>
+          <div class="map-coords" id="map-coords">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+            Click the map or use your location to pin your pharmacy
+          </div>
+          <div class="field-error" id="e-map">Please pin your pharmacy location on the map.</div>
+        </div>
       </div>
 
       <!-- Step 3 -->
@@ -215,12 +241,60 @@
     </div>
   </div>
 
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script>
     const SUPA_URL = 'https://ultudsxmjvzjfojoyjfu.supabase.co';
     const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
 
     let currentStep = 1;
     const TOTAL = 4;
+    let map = null;
+    let marker = null;
+    let pinnedLat = null;
+    let pinnedLng = null;
+
+    // Initialise map centred on Harare
+    function initMap() {
+      if (map) return;
+      map = L.map('map').setView([-17.8292, 31.0522], 12);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+      map.on('click', function(e) { placePin(e.latlng.lat, e.latlng.lng); });
+    }
+
+    function placePin(lat, lng) {
+      pinnedLat = lat;
+      pinnedLng = lng;
+      if (marker) { marker.setLatLng([lat, lng]); }
+      else {
+        marker = L.marker([lat, lng], { draggable: true }).addTo(map);
+        marker.on('dragend', function(e) {
+          const pos = e.target.getLatLng();
+          pinnedLat = pos.lat;
+          pinnedLng = pos.lng;
+          updateCoordsDisplay();
+        });
+      }
+      map.setView([lat, lng], 16);
+      updateCoordsDisplay();
+      document.getElementById('e-map').style.display = 'none';
+    }
+
+    function updateCoordsDisplay() {
+      const el = document.getElementById('map-coords');
+      el.className = 'map-coords set';
+      el.innerHTML = `<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Location pinned: ${pinnedLat.toFixed(5)}, ${pinnedLng.toFixed(5)} — drag the pin to adjust`;
+    }
+
+    function useMyLocation() {
+      if (!navigator.geolocation) { alert('Location not supported by your browser.'); return; }
+      navigator.geolocation.getCurrentPosition(
+        pos => { placePin(pos.coords.latitude, pos.coords.longitude); },
+        ()  => { alert('Could not get your location. Please click the map to pin your pharmacy manually.'); }
+      );
+    }
 
     function setStep(n) {
       for (let i = 1; i <= TOTAL; i++) {
@@ -235,6 +309,8 @@
       document.getElementById('btn-back').style.display = n > 1 ? 'inline-block' : 'none';
       document.getElementById('btn-next').textContent = n === TOTAL ? 'Submit registration' : 'Next →';
       currentStep = n;
+      // Init map when step 2 becomes visible
+      if (n === 2) { setTimeout(initMap, 100); }
     }
 
     function showErr(id, show) { const el = document.getElementById(id); if (el) el.style.display = show ? 'block' : 'none'; }
@@ -253,6 +329,8 @@
         check('f-street', 'e-street', !document.getElementById('f-street').value.trim());
         check('f-suburb', 'e-suburb', !document.getElementById('f-suburb').value.trim());
         check('f-city',   'e-city',   !document.getElementById('f-city').value);
+        // Map pin is required
+        if (!pinnedLat) { showErr('e-map', true); ok = false; } else { showErr('e-map', false); }
       }
       if (n === 3) {
         const days = document.querySelectorAll('.day-btn.selected').length;
@@ -308,7 +386,8 @@
         closes_at:       document.getElementById('f-close').value,
         operating_days:  days,
         offers_delivery: document.getElementById('f-delivery').checked,
-
+        latitude:        pinnedLat,
+        longitude:       pinnedLng
       };
 
       try {
