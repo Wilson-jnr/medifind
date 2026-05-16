@@ -351,6 +351,17 @@
 
     <div class="search-wrap">
       <input type="text" id="search-input" placeholder="Search by medicine name e.g. Paracetamol…" onkeydown="if(event.key==='Enter') doSearch()" />
+      <select id="city-filter" onchange="onCityChange()" style="height:48px;padding:0 12px;border-radius:var(--radius-sm);border:1.5px solid var(--border-mid);background:var(--card);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);flex-shrink:0">
+        <option value="">All cities</option>
+        <option>Harare</option>
+        <option>Bulawayo</option>
+        <option>Mutare</option>
+        <option>Gweru</option>
+        <option>Masvingo</option>
+        <option>Kwekwe</option>
+        <option>Kadoma</option>
+        <option>Chinhoyi</option>
+      </select>
       <button class="search-btn" id="search-btn" onclick="doSearch()">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         Search
@@ -372,7 +383,7 @@
     </div>
 
     <div id="default-section">
-      <p class="section-label">Registered pharmacies</p>
+      <p class="section-label" id="pharmacy-section-label">Registered pharmacies</p>
       <div class="pharmacy-list" id="pharmacy-list">
         <div class="pharmacy-row">
           <div><span class="spinner"></span> Loading pharmacies…</div>
@@ -444,10 +455,15 @@
 
     async function loadPharmacies() {
       const list = document.getElementById('pharmacy-list');
+      const city = document.getElementById('city-filter').value;
+      const label = document.getElementById('pharmacy-section-label');
+      label.textContent = city ? 'Pharmacies in ' + city : 'Registered pharmacies';
       try {
-        const data = await supaFetch('pharmacies?select=id,name,suburb,city,latitude,longitude&is_verified=eq.true&order=name');
+        let path = 'pharmacies?select=id,name,suburb,city,latitude,longitude&is_verified=eq.true&order=name';
+        if (city) path += '&city=eq.' + encodeURIComponent(city);
+        const data = await supaFetch(path);
         if (!data.length) {
-          list.innerHTML = '<div class="pharmacy-row"><div style="color:#888">No pharmacies registered yet.</div></div>';
+          list.innerHTML = '<div class="pharmacy-row"><div style="color:#888">No pharmacies found' + (city ? ' in ' + city : '') + '.</div></div>';
           return;
         }
 
@@ -456,7 +472,6 @@
             .then(r => r.length).catch(() => 0))
         );
 
-        // Calculate distances and sort by nearest if we have location
         let pharmacies = data.map((p, i) => {
           let dist = null;
           if (userLat !== null && p.latitude && p.longitude) {
@@ -491,29 +506,42 @@
       }
     }
 
+    function onCityChange() {
+      const q = document.getElementById('search-input').value.trim();
+      if (q) { doSearch(); } else { loadPharmacies(); }
+    }
+
     async function doSearch() {
       const q = document.getElementById('search-input').value.trim();
-      if (!q) return;
+      const city = document.getElementById('city-filter').value;
+      if (!q && !city) return;
       const btn = document.getElementById('search-btn');
       btn.disabled = true;
       btn.innerHTML = '<span class="spinner"></span>';
-      document.getElementById('results-label').textContent = 'Results for "' + q + '"';
+      const labelParts = [];
+      if (q) labelParts.push('"' + q + '"');
+      if (city) labelParts.push('in ' + city);
+      document.getElementById('results-label').textContent = 'Results for ' + labelParts.join(' ');
       document.getElementById('results-section').style.display = 'block';
       document.getElementById('default-section').style.display = 'none';
       const grid = document.getElementById('results-grid');
       grid.innerHTML = '<div class="state-box"><span class="spinner"></span> Searching…</div>';
       try {
-        const medicines = await supaFetch(
-          'medicines?select=name,quantity,price_usd,updated_at,pharmacies(name,suburb,city,latitude,longitude)' +
-          '&name=ilike.*' + encodeURIComponent(q) + '*&pharmacies.is_verified=eq.true&order=quantity.desc'
-        );
+        let path = 'medicines?select=name,quantity,price_usd,updated_at,pharmacy_id,pharmacies(id,name,suburb,city,latitude,longitude)';
+        if (q) path += '&name=ilike.*' + encodeURIComponent(q) + '*';
+        path += '&order=quantity.desc';
+        let medicines = await supaFetch(path);
+        // Filter by city client-side if selected
+        if (city && medicines) {
+          medicines = medicines.filter(m => m.pharmacies && m.pharmacies.city === city);
+        }
         btn.disabled = false;
         btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search';
 
-        if (!medicines.length) {
+        if (!medicines || !medicines.length) {
           grid.innerHTML = `<div class="state-box">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M8 15s1.5-2 4-2 4 2 4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
-            No results found for "<strong>${q}</strong>".<br>Try a different name or spelling.
+            No results found${q ? ' for "<strong>' + q + '</strong>"' : ''}${city ? ' in <strong>' + city + '</strong>' : ''}.<br>Try a different search.
           </div>`;
           return;
         }
