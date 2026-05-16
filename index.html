@@ -474,7 +474,7 @@
         }
 
         list.innerHTML = pharmacies.map(p => `
-          <div class="pharmacy-row">
+          <a class="pharmacy-row" href="pharmacy.html?id=${p.id}" style="text-decoration:none;color:inherit;cursor:pointer">
             <div>
               <div class="ph-name">${p.name}</div>
               <div class="ph-addr">
@@ -483,8 +483,8 @@
                 ${p.dist !== null ? '&nbsp;·&nbsp;<strong>' + formatDist(p.dist) + '</strong>' : ''}
               </div>
             </div>
-            <span class="ph-count">${p.count} medicine${p.count === 1 ? '' : 's'}</span>
-          </div>
+            <span class="ph-count">${p.count} medicine${p.count === 1 ? '' : 's'} →</span>
+          </a>
         `).join('');
       } catch(e) {
         list.innerHTML = '<div class="pharmacy-row"><div style="color:#A32D2D">Could not load pharmacies: ' + e.message + '</div></div>';
