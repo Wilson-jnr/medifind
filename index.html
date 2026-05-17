@@ -459,7 +459,7 @@
       const label = document.getElementById('pharmacy-section-label');
       label.textContent = city ? 'Pharmacies in ' + city : 'Registered pharmacies';
       try {
-        let path = 'pharmacies?select=id,name,suburb,city,latitude,longitude&is_verified=eq.true&order=name';
+        let path = 'pharmacies?select=id,name,suburb,city,latitude,longitude,plan&is_verified=eq.true&order=name';
         if (city) path += '&city=eq.' + encodeURIComponent(city);
         const data = await supaFetch(path);
         if (!data.length) {
@@ -482,16 +482,27 @@
 
         if (userLat !== null) {
           pharmacies.sort((a, b) => {
+            if (a.plan === 'premium' && b.plan !== 'premium') return -1;
+            if (b.plan === 'premium' && a.plan !== 'premium') return 1;
             if (a.dist === null) return 1;
             if (b.dist === null) return -1;
             return a.dist - b.dist;
           });
+        } else {
+          pharmacies.sort((a, b) => {
+            if (a.plan === 'premium' && b.plan !== 'premium') return -1;
+            if (b.plan === 'premium' && a.plan !== 'premium') return 1;
+            return 0;
+          });
         }
 
         list.innerHTML = pharmacies.map(p => `
-          <a class="pharmacy-row" href="pharmacy.html?id=${p.id}" style="text-decoration:none;color:inherit;cursor:pointer">
+          <a class="pharmacy-row" href="pharmacy.html?id=${p.id}" style="text-decoration:none;color:inherit;cursor:pointer;${p.plan==='premium'?'border-left:3px solid #1D9E75;':''}">
             <div>
-              <div class="ph-name">${p.name}</div>
+              <div class="ph-name" style="display:flex;align-items:center;gap:7px">
+                ${p.name}
+                ${p.plan==='premium'?'<span style="font-size:10px;font-weight:500;background:#E1F5EE;color:#085041;padding:2px 7px;border-radius:99px;border:1px solid #9FE1CB;letter-spacing:0.03em">⭐ Premium</span>':''}
+              </div>
               <div class="ph-addr">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="vertical-align:-1px;margin-right:3px"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
                 ${p.suburb}, ${p.city}
@@ -527,7 +538,7 @@
       const grid = document.getElementById('results-grid');
       grid.innerHTML = '<div class="state-box"><span class="spinner"></span> Searching…</div>';
       try {
-        let path = 'medicines?select=name,quantity,price_usd,updated_at,pharmacy_id,pharmacies(id,name,suburb,city,latitude,longitude)';
+        let path = 'medicines?select=name,quantity,price_usd,updated_at,pharmacy_id,pharmacies(id,name,suburb,city,latitude,longitude,plan)';
         if (q) path += '&name=ilike.*' + encodeURIComponent(q) + '*';
         path += '&order=quantity.desc';
         let medicines = await supaFetch(path);
@@ -556,8 +567,11 @@
           return { ...m, ph, dist };
         });
 
-        // Sort: in-stock nearest first, then low stock, then out of stock
+        // Sort: premium first, then in-stock nearest, then low stock, then out of stock
         results.sort((a, b) => {
+          const aPremium = a.ph.plan === 'premium' ? 0 : 1;
+          const bPremium = b.ph.plan === 'premium' ? 0 : 1;
+          if (aPremium !== bPremium) return aPremium - bPremium;
           const statusOrder = { 'in': 0, 'low': 1, 'out': 2 };
           const aStatus = getStatus(a.quantity || 0).cls === 'badge-in' ? 'in' : getStatus(a.quantity || 0).cls === 'badge-low' ? 'low' : 'out';
           const bStatus = getStatus(b.quantity || 0).cls === 'badge-in' ? 'in' : getStatus(b.quantity || 0).cls === 'badge-low' ? 'low' : 'out';
@@ -569,7 +583,7 @@
         grid.innerHTML = results.map((m, i) => {
           const st = getStatus(m.quantity || 0);
           const ph = m.ph;
-          return `<div class="med-card" style="animation-delay:${i * 0.04}s">
+          return `<div class="med-card" style="animation-delay:${i * 0.04}s${ph.plan==='premium'?';border-color:#9FE1CB;border-left:3px solid #1D9E75':''}">
             <div class="med-card-top">
               <div class="med-name">${m.name}</div>
               <span class="badge ${st.cls}">${st.label}</span>
@@ -577,6 +591,7 @@
             <div class="med-pharmacy">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
               ${ph.name || '—'}
+              ${ph.plan==='premium'?'<span style="font-size:10px;font-weight:500;background:#E1F5EE;color:#085041;padding:1px 6px;border-radius:99px;margin-left:4px">⭐ Premium</span>':''}
             </div>
             <div class="med-meta">
               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>

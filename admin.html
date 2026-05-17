@@ -348,15 +348,33 @@
           <div class="ph-meta">
             <span class="ph-tag" style="background:var(--green-light);color:var(--green-text);border-color:var(--green-mid)">${meds} medicine${meds===1?'':'s'} listed</span>
             <span class="ph-tag">Verified ${formatDate(p.created_at)}</span>
+            ${p.plan==='premium'?'<span class="ph-tag" style="background:#E1F5EE;color:#085041;border-color:#9FE1CB">⭐ Premium</span>':'<span class="ph-tag">Free plan</span>'}
             ${p.offers_delivery ? '<span class="ph-tag">Offers delivery</span>' : ''}
           </div>
         </div>
         <div class="ph-actions">
+          <button class="btn-approve" onclick="togglePlan('${p.id}', '${p.plan||'free'}')">${p.plan==='premium'?'⭐ Premium — Downgrade':'Upgrade to ⭐ Premium'}</button>
           <button class="btn-unverify" onclick="unverifyPharmacy('${p.id}')">Unverify</button>
           <button class="btn-delete"   onclick="deletePharmacy('${p.id}', '${p.name.replace(/'/g,"\\'")}')">Delete</button>
         </div>
       </div>`;
     }).join('');
+  }
+
+  async function togglePlan(id, currentPlan) {
+    const newPlan = currentPlan === 'premium' ? 'free' : 'premium';
+    const label = newPlan === 'premium' ? 'upgraded to Premium ⭐' : 'downgraded to Free';
+    try {
+      await supaFetch('/rest/v1/pharmacies?id=eq.' + id, {
+        method: 'PATCH',
+        headers: { 'Prefer': 'return=minimal' },
+        body: JSON.stringify({ plan: newPlan })
+      });
+      showToast('Pharmacy ' + label, 'ok');
+      await loadAll();
+    } catch(e) {
+      showToast('Failed: ' + e.message, 'err');
+    }
   }
 
   async function approvePharmacy(id) {

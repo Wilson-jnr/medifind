@@ -159,6 +159,18 @@
     <div class="stat"><div class="stat-label">Out of stock</div><div class="stat-val red" id="stat-out">—</div><div class="stat-sub">not available</div></div>
   </div>
 
+  <div id="premium-banner" style="display:none;background:#E1F5EE;border:1px solid #9FE1CB;border-radius:var(--radius);padding:1rem 1.25rem;margin-bottom:1.5rem;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap">
+    <div>
+      <div style="font-size:14px;font-weight:500;color:#085041;margin-bottom:3px">⭐ Upgrade to Premium — $10/month</div>
+      <div style="font-size:13px;color:#0F6E56">Appear first in all search results and pharmacy listings. Contact us to upgrade.</div>
+    </div>
+    <a href="mailto:admin@medifind.co.zw?subject=Premium upgrade request" style="height:36px;padding:0 16px;border-radius:var(--radius-sm);background:#1D9E75;color:#fff;text-decoration:none;font-size:13px;font-weight:500;display:inline-flex;align-items:center;white-space:nowrap">Contact us to upgrade →</a>
+  </div>
+
+  <div id="premium-active" style="display:none;background:#E1F5EE;border:1px solid #9FE1CB;border-radius:var(--radius);padding:0.875rem 1.25rem;margin-bottom:1.5rem;font-size:13px;color:#085041;font-weight:500">
+    ⭐ Premium plan active — your pharmacy appears first in all search results
+  </div>
+
   <div class="toolbar">
     <input type="text" id="db-search" placeholder="Search medicines…" oninput="renderTable()" />
     <select id="db-filter-status" onchange="renderTable()">
@@ -285,10 +297,18 @@
     let pharmacyName = 'Your Pharmacy';
     let userName     = email.split('@')[0];
     try {
-      const pharms = await supaFetch('/rest/v1/pharmacies?select=id,name&email=eq.' + encodeURIComponent(email));
+      const pharms = await supaFetch('/rest/v1/pharmacies?select=id,name,plan&email=eq.' + encodeURIComponent(email));
       if (pharms && pharms.length > 0) {
         pharmacyId   = pharms[0].id;
         pharmacyName = pharms[0].name;
+        const plan   = pharms[0].plan || 'free';
+        if (plan === 'premium') {
+          document.getElementById('premium-active').style.display = 'block';
+          document.getElementById('premium-banner').style.display = 'none';
+        } else {
+          document.getElementById('premium-banner').style.display = 'flex';
+          document.getElementById('premium-active').style.display = 'none';
+        }
       }
     } catch(e) { /* continue without pharmacy link */ }
 
