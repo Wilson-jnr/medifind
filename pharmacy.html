@@ -57,7 +57,19 @@
     .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border-mid);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:-4px;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
     footer{text-align:center;padding:2rem;font-size:12px;color:var(--ink-light);border-top:1px solid var(--border);margin-top:2rem}
-    @media(max-width:600px){.profile-hero{flex-direction:column;gap:1rem}}
+    @media(max-width:600px){
+      nav{padding:0 1rem;height:56px}
+      .nav-back span{display:none}
+      .page{padding:1rem 1rem 3rem}
+      .profile-hero{flex-direction:column;gap:1rem;padding:1.25rem 1rem}
+      .profile-name{font-size:20px}
+      .profile-stats{grid-template-columns:repeat(3,1fr)}
+      .profile-stat-val{font-size:18px}
+      .med-grid{grid-template-columns:1fr}
+      .toolbar{flex-direction:column}
+      .toolbar input,.toolbar select{width:100%;font-size:16px}
+      .map-link{font-size:13px;padding:8px 12px}
+    }
   </style>
 </head>
 <body>

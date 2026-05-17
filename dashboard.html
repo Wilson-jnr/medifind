@@ -118,8 +118,29 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 640px) {
-      .stats { grid-template-columns: 1fr 1fr; }
+      nav { padding: 0 1rem; height: 56px; }
+      .nav-pharmacy { display: none; }
+      .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat { padding: 0.75rem; }
+      .stat-val { font-size: 20px; }
+      .dashboard { padding: 1rem 1rem 3rem; }
+      .toolbar { gap: 6px; }
+      .toolbar input { min-width: 0; font-size: 16px; }
+      .toolbar select { font-size: 16px; }
+      .btn-add { padding: 0 12px; font-size: 13px; }
       thead th:nth-child(2), tbody td:nth-child(2) { display: none; }
+      thead th:nth-child(5), tbody td:nth-child(5) { display: none; }
+      tbody td { padding: 10px 8px; font-size: 12px; }
+      thead th { padding: 8px; font-size: 10px; }
+      .qty-btn { width: 28px; height: 28px; font-size: 16px; }
+      .qty-val { font-size: 14px; }
+      .action-btn { padding: 4px 7px; font-size: 11px; }
+      .modal-bg { align-items: flex-end; padding: 0; }
+      .modal { border-radius: var(--radius) var(--radius) 0 0; max-width: 100%; padding: 1.5rem 1.25rem 2rem; }
+      .field input, .field select { font-size: 16px; }
+      .login-wrap { margin: 2rem auto; }
+      .login-card { padding: 1.5rem 1.25rem; }
+      .field input { font-size: 16px; }
     }
   </style>
 </head>

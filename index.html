@@ -326,6 +326,41 @@
       color: var(--ink-light);
       border-top: 1px solid var(--border);
     }
+    /* ── Mobile ── */
+    @media (max-width: 640px) {
+      nav { padding: 0 1rem; height: 56px; }
+      .nav-links { gap: 4px; }
+      .nav-link { display: none; }
+      .nav-link:last-of-type { display: none; }
+      .nav-btn { font-size: 13px; padding: 7px 12px; }
+
+      .hero { margin: 2.5rem auto 2rem; padding: 0 1rem; }
+      .hero h1 { font-size: 2rem; }
+      .hero p { font-size: 15px; margin-bottom: 1.5rem; }
+
+      .search-wrap { flex-direction: column; gap: 8px; }
+      .search-wrap input { height: 50px; font-size: 16px; /* prevents iOS zoom */ }
+      #city-filter { height: 50px; font-size: 16px; border-radius: var(--radius-sm); border: 1.5px solid var(--border-mid); width: 100%; padding: 0 12px; }
+      .search-btn { height: 50px; width: 100%; justify-content: center; font-size: 16px; border-radius: var(--radius-sm); }
+
+      .pills { gap: 5px; }
+      .pill { font-size: 12px; padding: 5px 10px; }
+
+      main { padding: 0 1rem 3rem; }
+
+      .results-grid { grid-template-columns: 1fr; }
+      .med-card { padding: 0.875rem 1rem; }
+
+      .pharmacy-list { border-radius: var(--radius-sm); }
+      .pharmacy-row { padding: 12px 14px; }
+      .ph-name { font-size: 14px; }
+      .ph-addr { font-size: 12px; }
+      .ph-count { font-size: 12px; padding: 3px 8px; }
+
+      footer { padding: 1.5rem 1rem; }
+      footer p { font-size: 12px; line-height: 1.7; }
+      footer a { display: inline-block; margin: 2px 6px; }
+    }
   </style>
 </head>
 <body>
@@ -336,6 +371,8 @@
       Medi<span>Find</span>
     </a>
     <div class="nav-links">
+      <a class="nav-link" href="about.html">About</a>
+      <a class="nav-link" href="contact.html">Contact</a>
       <a class="nav-link" href="register.html">Register your pharmacy</a>
       <a class="nav-btn" href="dashboard.html">Pharmacy login</a>
     </div>
@@ -394,7 +431,13 @@
 
   <footer>
     <p>Stock data is updated by pharmacies in real time. Always confirm availability before visiting.</p>
-    <p style="margin-top:6px">© 2025 MediFind Zimbabwe</p>
+    <p style="margin-top:10px">
+      <a href="about.html" style="color:var(--ink-mid);text-decoration:none;margin:0 8px;font-size:13px">About</a>
+      <a href="contact.html" style="color:var(--ink-mid);text-decoration:none;margin:0 8px;font-size:13px">Contact</a>
+      <a href="privacy.html" style="color:var(--ink-mid);text-decoration:none;margin:0 8px;font-size:13px">Privacy Policy</a>
+      <a href="register.html" style="color:var(--ink-mid);text-decoration:none;margin:0 8px;font-size:13px">Register your pharmacy</a>
+    </p>
+    <p style="margin-top:10px;font-size:12px;color:var(--ink-light)">© 2026 MediFind Zimbabwe · Free for patients · Always</p>
   </footer>
 
   <script>

@@ -114,9 +114,21 @@
     @keyframes spin { to { transform: rotate(360deg); } }
 
     @media (max-width: 600px) {
-      .stats { grid-template-columns: 1fr 1fr; }
-      .ph-card { flex-direction: column; }
-      .ph-actions { width: 100%; }
+      nav { padding: 0 1rem; height: 56px; }
+      .nav-user { display: none; }
+      .stats { grid-template-columns: 1fr 1fr; gap: 8px; }
+      .stat { padding: 0.75rem; }
+      .stat-val { font-size: 20px; }
+      .admin { padding: 1rem 1rem 3rem; }
+      .section-title { font-size: 16px; }
+      .ph-card { flex-direction: column; gap: 0.75rem; padding: 1rem; }
+      .ph-actions { width: 100%; flex-direction: row; flex-wrap: wrap; }
+      .btn-approve, .btn-reject, .btn-unverify, .btn-delete { flex: 1; justify-content: center; font-size: 13px; height: 38px; }
+      .ph-name { font-size: 14px; }
+      .ph-detail { font-size: 12px; }
+      .login-wrap { margin: 2rem auto; }
+      .login-card { padding: 1.5rem 1.25rem; }
+      .field input { font-size: 16px; }
     }
   </style>
 </head>

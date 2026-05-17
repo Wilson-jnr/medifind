@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About — MediFind Zimbabwe</title>
+  <meta name="description" content="MediFind Zimbabwe helps patients find medicines at local pharmacies without wasted trips. Learn about our mission." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #1D9E75; --green-dark: #0F6E56; --green-light: #E1F5EE; --green-mid: #9FE1CB; --green-text: #085041;
+      --ink: #1a1a1a; --ink-mid: #555; --ink-light: #888;
+      --surface: #f7f6f2; --card: #ffffff; --border: #e5e3dc; --border-mid: #ccc9c0;
+      --radius: 12px; --radius-sm: 8px;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; }
+    nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
+    .nav-logo { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
+    .nav-logo span { color: var(--green); }
+    .nav-back { font-size: 14px; color: var(--ink-mid); text-decoration: none; padding: 7px 12px; border-radius: var(--radius-sm); }
+    .nav-back:hover { background: var(--surface); }
+
+    .hero { max-width: 700px; margin: 4rem auto 3rem; padding: 0 1.5rem; text-align: center; }
+    .hero-tag { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: var(--green); border: 1px solid var(--green-mid); background: var(--green-light); padding: 4px 12px; border-radius: 99px; margin-bottom: 1.25rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; }
+    h1 { font-family: 'Fraunces', serif; font-size: 36px; font-weight: 500; letter-spacing: -1px; margin-bottom: 1rem; line-height: 1.2; }
+    h1 em { font-style: italic; color: var(--green); }
+    .hero-sub { font-size: 16px; color: var(--ink-mid); line-height: 1.7; max-width: 520px; margin: 0 auto; }
+
+    .page { max-width: 800px; margin: 0 auto; padding: 0 1.5rem 5rem; }
+
+    .mission-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; margin: 3rem 0; }
+    .mission-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; }
+    .mission-card-icon { width: 40px; height: 40px; border-radius: 10px; background: var(--green-light); display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; }
+    .mission-card h3 { font-size: 16px; font-weight: 500; margin-bottom: 0.5rem; }
+    .mission-card p { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
+
+    .story { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem; margin-bottom: 2rem; }
+    .story h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; margin-bottom: 1rem; }
+    .story p { font-size: 15px; color: var(--ink-mid); line-height: 1.75; margin-bottom: 1rem; }
+    .story p:last-child { margin-bottom: 0; }
+
+    .values { margin-bottom: 2rem; }
+    .values h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; margin-bottom: 1.25rem; }
+    .value-row { display: flex; gap: 12px; align-items: flex-start; padding: 1rem 0; border-bottom: 1px solid var(--border); }
+    .value-row:last-child { border-bottom: none; }
+    .value-num { font-size: 13px; font-weight: 500; color: var(--green); min-width: 28px; margin-top: 2px; }
+    .value-title { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+    .value-desc { font-size: 14px; color: var(--ink-mid); line-height: 1.6; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 2rem; }
+    .stat-card { background: var(--green-light); border: 1px solid var(--green-mid); border-radius: var(--radius); padding: 1.25rem; text-align: center; }
+    .stat-val { font-family: 'Fraunces', serif; font-size: 28px; font-weight: 500; color: var(--green-text); margin-bottom: 4px; }
+    .stat-label { font-size: 13px; color: var(--green-text); }
+
+    .cta-box { background: #111; border-radius: var(--radius); padding: 2rem; text-align: center; }
+    .cta-box h2 { font-family: 'Fraunces', serif; font-size: 24px; font-weight: 500; color: #fff; margin-bottom: 0.5rem; }
+    .cta-box p { font-size: 14px; color: rgba(255,255,255,0.55); margin-bottom: 1.5rem; line-height: 1.6; }
+    .cta-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .btn-w { padding: 10px 22px; border-radius: var(--radius-sm); background: #fff; color: #111; font-size: 14px; font-weight: 500; text-decoration: none; }
+    .btn-g { padding: 10px 22px; border-radius: var(--radius-sm); background: var(--green); color: #fff; font-size: 14px; font-weight: 500; text-decoration: none; }
+
+    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 12px; color: var(--ink-light); margin-top: 2rem; }
+    footer a { color: var(--ink-mid); text-decoration: none; margin: 0 8px; }
+    footer a:hover { color: var(--ink); }
+
+    @media (max-width: 600px) {
+      nav { padding: 0 1rem; height: 56px; }
+      .nav-back { font-size: 13px; padding: 6px 8px; }
+      .hero { margin: 2rem auto 1.5rem; padding: 0 1rem; }
+      h1 { font-size: 26px; }
+      .hero-sub { font-size: 15px; }
+      .page { padding: 0 1rem 3rem; }
+      .mission-grid { grid-template-columns: 1fr; }
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .cta-box { padding: 1.5rem 1.25rem; border-radius: var(--radius); }
+      .cta-box h2 { font-size: 20px; }
+      .cta-btns { flex-direction: column; }
+      .btn-w, .btn-g { text-align: center; padding: 12px 20px; }
+      .story { padding: 1.25rem; }
+      .story h2 { font-size: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+    Medi<span>Find</span>
+  </a>
+  <a class="nav-back" href="index.html">← Back to homepage</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">Our mission</div>
+  <h1>No more wasted trips<br/>to the <em>pharmacy</em></h1>
+  <p class="hero-sub">MediFind is a free service that helps patients in Zimbabwe find medicines at local pharmacies — before they leave home.</p>
+</div>
+
+<div class="page">
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-val">Free</div>
+      <div class="stat-label">Always free for patients</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">Real-time</div>
+      <div class="stat-label">Stock updated by pharmacies</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-val">🇿🇼</div>
+      <div class="stat-label">Built for Zimbabwe</div>
+    </div>
+  </div>
+
+  <div class="story">
+    <h2>Why we built MediFind</h2>
+    <p>Anyone who has looked for medicine in Zimbabwe knows the frustration — you travel across town to a pharmacy, only to find they don't stock what you need. You try another. Then another. Time, money, and energy wasted, often when you or a loved one is already unwell.</p>
+    <p>MediFind was built to solve this problem. By connecting pharmacies with patients through a simple, free platform, we make it possible to check medicine availability before making the trip. Pharmacies update their own stock in real time, and patients search for free.</p>
+    <p>Our goal is to make healthcare access more efficient across Zimbabwe — starting with Harare and growing from there.</p>
+  </div>
+
+  <div class="mission-grid">
+    <div class="mission-card">
+      <div class="mission-card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <h3>For patients</h3>
+      <p>Search any medicine and see which pharmacies near you have it in stock right now. Completely free, no account required.</p>
+    </div>
+    <div class="mission-card">
+      <div class="mission-card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      </div>
+      <h3>For pharmacies</h3>
+      <p>Register your pharmacy for free and let patients find you. Update your stock in real time from any device. Premium placement available.</p>
+    </div>
+    <div class="mission-card">
+      <div class="mission-card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <h3>Location-aware</h3>
+      <p>Results are sorted by distance from your location so you always see the nearest pharmacy that has your medicine first.</p>
+    </div>
+    <div class="mission-card">
+      <div class="mission-card-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      </div>
+      <h3>Real-time data</h3>
+      <p>Stock levels are updated directly by pharmacies. When a medicine runs out or comes back in, the information updates immediately.</p>
+    </div>
+  </div>
+
+  <div class="values">
+    <h2>Our values</h2>
+    <div class="value-row">
+      <div class="value-num">01</div>
+      <div>
+        <div class="value-title">Access for everyone</div>
+        <div class="value-desc">MediFind is free for patients and always will be. Healthcare information should not be behind a paywall.</div>
+      </div>
+    </div>
+    <div class="value-row">
+      <div class="value-num">02</div>
+      <div>
+        <div class="value-title">Accuracy first</div>
+        <div class="value-desc">We encourage pharmacies to keep their stock updated in real time. We always remind patients to confirm availability before visiting.</div>
+      </div>
+    </div>
+    <div class="value-row">
+      <div class="value-num">03</div>
+      <div>
+        <div class="value-title">Built for Zimbabwe</div>
+        <div class="value-desc">MediFind is designed around the realities of the Zimbabwean healthcare and pharmacy landscape — not copied from elsewhere.</div>
+      </div>
+    </div>
+    <div class="value-row">
+      <div class="value-num">04</div>
+      <div>
+        <div class="value-title">Privacy respected</div>
+        <div class="value-desc">We do not sell patient data. Searches are not stored. Location is used only to calculate distances and never saved permanently.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="cta-box">
+    <h2>Own a pharmacy in Zimbabwe?</h2>
+    <p>Join MediFind for free. Register your pharmacy, list your medicines, and let patients find you — no monthly fees to get started.</p>
+    <div class="cta-btns">
+      <a class="btn-w" href="contact.html">Get in touch</a>
+      <a class="btn-g" href="register.html">Register your pharmacy →</a>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>© 2026 MediFind Zimbabwe</p>
+  <p style="margin-top:8px">
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="privacy.html">Privacy Policy</a>
+    <a href="contact.html">Contact</a>
+    <a href="register.html">Register your pharmacy</a>
+  </p>
+</footer>
+
+</body>
+</html>
