@@ -71,8 +71,8 @@
     /* RESULTS */
     .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:2rem}
     @media(max-width:480px){.results-grid{grid-template-columns:1fr}}
-    .med-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:.875rem 1rem;animation:fadeUp .25s ease both}
-    .med-card:hover{border-color:var(--bd2)}
+    .med-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:.875rem 1rem;animation:fadeUp .25s ease both;cursor:pointer;color:inherit}
+    .med-card:hover{border-color:var(--green);transform:translateY(-1px);transition:all .15s}
     @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     .med-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
     .med-name{font-size:14px;font-weight:500;color:var(--ink);word-break:break-word}
@@ -230,11 +230,11 @@ async function doSearch(){
     if(!meds||!meds.length){grid.innerHTML='<div class="state-box">No results found'+(q?' for <strong>'+q+'</strong>':'')+(city?' in <strong>'+city+'</strong>':'')+'.<br>Try a different name.</div>';return}
     let results=meds.map(m=>{const ph=m.pharmacies||{};let dist=null;if(userLat!==null&&ph.latitude&&ph.longitude)dist=getDistKm(userLat,userLng,parseFloat(ph.latitude),parseFloat(ph.longitude));return{...m,ph,dist}});
     results.sort((a,b)=>{const ap=a.ph.plan==='premium'?0:1,bp=b.ph.plan==='premium'?0:1;if(ap!==bp)return ap-bp;const so={'in':0,'low':1,'out':2};const as=getStatus(a.quantity||0).key,bs=getStatus(b.quantity||0).key;if(so[as]!==so[bs])return so[as]-so[bs];if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;return 0});
-    grid.innerHTML=results.map((m,i)=>{const st=getStatus(m.quantity||0);const ph=m.ph;return`<div class="med-card" style="animation-delay:${i*.03}s${ph.plan==='premium'?';border-left:3px solid var(--green)':''}">
+    grid.innerHTML=results.map((m,i)=>{const st=getStatus(m.quantity||0);const ph=m.ph;const href=ph.id?'pharmacy.html?id='+ph.id:'#';return`<a class="med-card" href="${href}" style="text-decoration:none;display:block;animation-delay:${i*.03}s${ph.plan==='premium'?';border-left:3px solid var(--green)':''}">
       <div class="med-card-top"><div class="med-name">${m.name}</div><span class="badge ${st.cls}">${st.label}</span></div>
       <div class="med-pharmacy">${ph.name||'—'}${ph.plan==='premium'?' ⭐':''}</div>
       <div class="med-meta">${ph.suburb?ph.suburb+', '+ph.city:'—'}${m.dist!==null?' · '+fmtDist(m.dist):''}${m.price_usd?' · $'+parseFloat(m.price_usd).toFixed(2):''} · ${timeAgo(m.updated_at)}</div>
-    </div>`}).join('');
+    </a>`}).join('');
   }catch(e){btn.disabled=false;btn.innerHTML='Search';grid.innerHTML='<div class="state-box" style="color:var(--red-tx)">Search failed: '+e.message+'</div>'}
 }
 function quickSearch(name){document.getElementById('search-input').value=name;doSearch()}
