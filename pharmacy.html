@@ -1,115 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Pharmacy — MediFind</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pharmacy — PharmFinderz</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root{--green:#1D9E75;--green-dark:#0F6E56;--green-light:#E1F5EE;--green-mid:#9FE1CB;--green-text:#085041;--amber-bg:#FAEEDA;--amber-text:#854F0B;--red-bg:#FCEBEB;--red-text:#A32D2D;--ink:#1a1a1a;--ink-mid:#555;--ink-light:#888;--surface:#f7f6f2;--card:#ffffff;--border:#e5e3dc;--border-mid:#ccc9c0;--radius:12px;--radius-sm:8px}
+    :root{--green:#1D9E75;--green-dk:#0F6E56;--green-lt:#E1F5EE;--green-md:#9FE1CB;--green-tx:#085041;--amber-bg:#FAEEDA;--amber-tx:#854F0B;--red-bg:#FCEBEB;--red-tx:#A32D2D;--ink:#1a1a1a;--ink2:#555;--ink3:#888;--bg:#f7f6f2;--card:#fff;--bd:#e5e3dc;--bd2:#ccc9c0;--r:12px;--rs:8px}
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    body{font-family:'DM Sans',sans-serif;background:var(--surface);color:var(--ink);min-height:100vh}
-    nav{background:var(--card);border-bottom:1px solid var(--border);padding:0 2rem;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-    .nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px}
+    html{-webkit-text-size-adjust:100%}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
+    nav{background:var(--card);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;position:sticky;top:0;z-index:100;gap:8px}
+    .nav-logo{font-family:'Fraunces',serif;font-size:18px;font-weight:500;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0}
     .nav-logo span{color:var(--green)}
-    .nav-back{font-size:14px;color:var(--ink-mid);text-decoration:none;display:flex;align-items:center;gap:5px;padding:7px 12px;border-radius:var(--radius-sm);transition:background 0.15s}
-    .nav-back:hover{background:var(--surface);color:var(--ink)}
-    .page{max-width:860px;margin:0 auto;padding:2rem 1.5rem 4rem}
-    .profile-hero{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1.75rem 2rem;margin-bottom:1.5rem;display:flex;gap:1.5rem;align-items:flex-start}
-    .profile-icon{width:56px;height:56px;border-radius:var(--radius-sm);background:var(--green-light);color:var(--green-text);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:22px;font-weight:600;flex-shrink:0}
+    .nav-back{font-size:13px;color:var(--ink2);text-decoration:none;display:flex;align-items:center;gap:5px;padding:6px 10px;border-radius:var(--rs);white-space:nowrap}
+    .nav-back:hover{background:var(--bg)}
+    .page{max-width:840px;margin:0 auto;padding:1.25rem 1rem 4rem}
+
+    /* HERO */
+    .profile-hero{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:1.25rem;margin-bottom:1.25rem;display:flex;gap:1rem;align-items:flex-start}
+    .profile-icon{width:48px;height:48px;border-radius:var(--rs);background:var(--green-lt);color:var(--green-tx);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:20px;font-weight:500;flex-shrink:0}
     .profile-info{flex:1;min-width:0}
-    .profile-name{font-family:'Fraunces',serif;font-size:24px;font-weight:500;margin-bottom:0.5rem}
-    .profile-detail{font-size:13px;color:var(--ink-mid);display:flex;align-items:center;gap:6px;margin-bottom:4px;flex-wrap:wrap}
-    .profile-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:0.875rem}
-    .profile-tag{font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid var(--border);color:var(--ink-mid);background:var(--surface)}
-    .profile-tag.green{background:var(--green-light);color:var(--green-text);border-color:var(--green-mid)}
-    .profile-tag.amber{background:var(--amber-bg);color:var(--amber-text);border-color:#FAC775}
-    .map-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--green);text-decoration:none;font-weight:500;padding:6px 12px;border:1px solid var(--green-mid);border-radius:var(--radius-sm);transition:all 0.15s;margin-top:0.875rem}
-    .map-link:hover{background:var(--green-light)}
-    .profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:1.5rem}
-    .profile-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0.875rem 1rem;text-align:center}
-    .profile-stat-val{font-size:22px;font-weight:500;color:var(--ink)}
-    .profile-stat-val.green{color:var(--green-text)}
-    .profile-stat-val.amber{color:var(--amber-text)}
-    .profile-stat-val.red{color:var(--red-text)}
-    .profile-stat-label{font-size:11px;color:var(--ink-light);text-transform:uppercase;letter-spacing:0.06em;margin-top:4px}
-    .section-label{font-size:11px;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink-light);margin-bottom:0.875rem}
+    .profile-name{font-family:'Fraunces',serif;font-size:clamp(18px,4vw,22px);font-weight:500;margin-bottom:.5rem;word-break:break-word}
+    .profile-detail{font-size:13px;color:var(--ink2);display:flex;align-items:flex-start;gap:5px;margin-bottom:4px;flex-wrap:wrap;line-height:1.5}
+    .profile-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:.75rem}
+    .profile-tag{font-size:12px;padding:4px 10px;border-radius:99px;border:1px solid var(--bd);color:var(--ink2);background:var(--bg)}
+    .profile-tag.green{background:var(--green-lt);color:var(--green-tx);border-color:var(--green-md)}
+    .profile-tag.amber{background:var(--amber-bg);color:var(--amber-tx);border-color:#FAC775}
+    .map-link{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--green);text-decoration:none;font-weight:500;padding:7px 12px;border:1px solid var(--green-md);border-radius:var(--rs);margin-top:.875rem}
+    .map-link:hover{background:var(--green-lt)}
+    @media(max-width:480px){.profile-hero{flex-direction:column}}
+
+    /* STATS */
+    .profile-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1.25rem}
+    .profile-stat{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:.875rem;text-align:center}
+    .profile-stat-val{font-size:20px;font-weight:500}
+    .profile-stat-val.green{color:var(--green-tx)}.profile-stat-val.amber{color:var(--amber-tx)}.profile-stat-val.red{color:var(--red-tx)}
+    .profile-stat-label{font-size:11px;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-top:4px}
+
+    .section-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem}
+
+    /* TOOLBAR */
     .toolbar{display:flex;gap:8px;margin-bottom:1rem;flex-wrap:wrap}
-    .toolbar input{flex:1;min-width:160px;height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-mid);background:var(--card);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink)}
+    .toolbar input{flex:1;min-width:0;height:38px;padding:0 12px;border-radius:var(--rs);border:1px solid var(--bd2);background:var(--card);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink)}
     .toolbar input:focus{outline:none;border-color:var(--green)}
-    .toolbar select{height:36px;padding:0 12px;border-radius:var(--radius-sm);border:1px solid var(--border-mid);background:var(--card);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink)}
-    .med-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px}
-    .med-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:1rem 1.125rem;transition:border-color 0.15s;animation:fadeUp 0.25s ease both}
-    .med-card:hover{border-color:var(--border-mid)}
+    .toolbar select{height:38px;padding:0 10px;border-radius:var(--rs);border:1px solid var(--bd2);background:var(--card);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);-webkit-appearance:none}
+
+    /* MED GRID */
+    .med-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+    @media(max-width:480px){.med-grid{grid-template-columns:1fr}}
+    .med-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:.875rem 1rem;animation:fadeUp .25s ease both}
+    .med-card:hover{border-color:var(--bd2)}
     @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
     .med-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-    .med-name{font-size:14px;font-weight:500;color:var(--ink)}
+    .med-name{font-size:14px;font-weight:500;word-break:break-word}
     .badge{font-size:11px;padding:3px 8px;border-radius:99px;white-space:nowrap;font-weight:500;flex-shrink:0}
-    .badge-in{background:var(--green-light);color:var(--green-text)}
-    .badge-low{background:var(--amber-bg);color:var(--amber-text)}
-    .badge-out{background:var(--red-bg);color:var(--red-text)}
-    .med-cat{font-size:12px;color:var(--ink-light);margin-bottom:6px}
-    .med-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
-    .med-qty{font-size:12px;color:var(--ink-mid)}
-    .med-price{font-size:13px;font-weight:500;color:var(--ink)}
-    .state-box{text-align:center;padding:3rem 1rem;color:var(--ink-light);font-size:14px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);grid-column:1/-1}
-    .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--border-mid);border-top-color:var(--green);border-radius:50%;animation:spin 0.7s linear infinite;vertical-align:-4px;margin-right:6px}
+    .badge-in{background:var(--green-lt);color:var(--green-tx)}
+    .badge-low{background:var(--amber-bg);color:var(--amber-tx)}
+    .badge-out{background:var(--red-bg);color:var(--red-tx)}
+    .med-cat{font-size:12px;color:var(--ink3);margin-bottom:6px}
+    .med-footer{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--bd);gap:6px;flex-wrap:wrap}
+    .med-qty{font-size:12px;color:var(--ink2)}
+    .med-price{font-size:13px;font-weight:500}
+
+    .state-box{text-align:center;padding:2.5rem 1rem;color:var(--ink3);font-size:14px;grid-column:1/-1;background:var(--card);border:1px solid var(--bd);border-radius:var(--r)}
+    .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bd2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-4px;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
-    footer{text-align:center;padding:2rem;font-size:12px;color:var(--ink-light);border-top:1px solid var(--border);margin-top:2rem}
-    @media(max-width:600px){
-      nav{padding:0 1rem;height:56px}
-      .nav-back span{display:none}
-      .page{padding:1rem 1rem 3rem}
-      .profile-hero{flex-direction:column;gap:1rem;padding:1.25rem 1rem}
-      .profile-name{font-size:20px}
-      .profile-stats{grid-template-columns:repeat(3,1fr)}
-      .profile-stat-val{font-size:18px}
-      .med-grid{grid-template-columns:1fr}
-      .toolbar{flex-direction:column}
-      .toolbar input,.toolbar select{width:100%;font-size:16px}
-      .map-link{font-size:13px;padding:8px 12px}
-    }
+    footer{text-align:center;padding:1.75rem 1rem;font-size:12px;color:var(--ink3);border-top:1px solid var(--bd);margin-top:2rem;line-height:2}
+    footer a{color:var(--ink2);text-decoration:none;margin:0 6px}
   </style>
 </head>
 <body>
 <nav>
   <a class="nav-logo" href="index.html">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
-    Medi<span>Find</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+    Pharm<span>Finderz</span>
   </a>
   <a class="nav-back" href="index.html">
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
-    Back to search
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M19 12H5"/><path d="M12 19l-7-7 7-7"/></svg>
+    Back
   </a>
 </nav>
+
 <div class="page" id="page">
-  <div style="text-align:center;padding:3rem;color:var(--ink-light)"><span class="spinner"></span> Loading pharmacy…</div>
+  <div style="text-align:center;padding:3rem 1rem;color:var(--ink3)"><span class="spinner"></span> Loading pharmacy…</div>
 </div>
+
 <footer>
-  <p>Stock data is updated by pharmacies in real time. Always confirm availability before visiting.</p>
-  <p style="margin-top:6px">© 2025 MediFind Zimbabwe</p>
+  <p>Stock updated by pharmacies in real time. Always confirm before visiting.</p>
+  <p><a href="index.html">Home</a><a href="about.html">About</a><a href="contact.html">Contact</a></p>
+  <p>© 2026 PharmFinderz Zimbabwe</p>
 </footer>
+
 <script>
 const SUPA_URL='https://ultudsxmjvzjfojoyjfu.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
 let userLat=null,userLng=null,allMedicines=[];
-const params=new URLSearchParams(window.location.search);
-const pharmacyId=params.get('id');
+const params=new URLSearchParams(window.location.search),pharmacyId=params.get('id');
 if(!pharmacyId)window.location.href='index.html';
 if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{userLat=p.coords.latitude;userLng=p.coords.longitude},()=>{});
 async function supaFetch(path){const res=await fetch(SUPA_URL+'/rest/v1/'+path,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});if(!res.ok)throw new Error((await res.json()).message);return res.json()}
 function getStatus(qty){if(qty===0)return{cls:'badge-out',label:'Out of stock',key:'out'};if(qty<=15)return{cls:'badge-low',label:'Low stock',key:'low'};return{cls:'badge-in',label:'In stock',key:'in'}}
-function getDistanceKm(lat1,lng1,lat2,lng2){const R=6371,dLat=(lat2-lat1)*Math.PI/180,dLng=(lng2-lng1)*Math.PI/180,a=Math.sin(dLat/2)*Math.sin(dLat/2)+Math.cos(lat1*Math.PI/180)*Math.cos(lat2*Math.PI/180)*Math.sin(dLng/2)*Math.sin(dLng/2);return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
-function formatDist(km){return km<1?Math.round(km*1000)+' m away':km.toFixed(1)+' km away'}
-function timeAgo(ts){const mins=Math.round((Date.now()-new Date(ts).getTime())/60000);if(mins<1)return'just now';if(mins<60)return mins+'m ago';const hrs=Math.round(mins/60);if(hrs<24)return hrs+'h ago';return Math.round(hrs/24)+'d ago'}
+function getDistKm(la1,lo1,la2,lo2){const R=6371,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180,a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
+function fmtDist(km){return km<1?Math.round(km*1000)+' m away':km.toFixed(1)+' km away'}
+function timeAgo(ts){const m=Math.round((Date.now()-new Date(ts).getTime())/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.round(m/60);if(h<24)return h+'h ago';return Math.round(h/24)+'d ago'}
 function renderMedicines(){
   const q=document.getElementById('med-search')?document.getElementById('med-search').value.toLowerCase():'';
   const sf=document.getElementById('med-filter')?document.getElementById('med-filter').value:'';
   const grid=document.getElementById('med-grid');if(!grid)return;
   const filtered=allMedicines.filter(m=>{if(q&&!m.name.toLowerCase().includes(q)&&!(m.category||'').toLowerCase().includes(q))return false;if(sf&&getStatus(m.quantity||0).key!==sf)return false;return true});
   if(!filtered.length){grid.innerHTML='<div class="state-box">No medicines match your search.</div>';return}
-  grid.innerHTML=filtered.map((m,i)=>{const st=getStatus(m.quantity||0);return`<div class="med-card" style="animation-delay:${i*0.03}s"><div class="med-top"><div class="med-name">${m.name}</div><span class="badge ${st.cls}">${st.label}</span></div><div class="med-cat">${m.category||'Uncategorised'}</div><div class="med-footer"><span class="med-qty">${m.quantity||0} units · ${timeAgo(m.updated_at)}</span><span class="med-price">${m.price_usd?'$'+parseFloat(m.price_usd).toFixed(2):'—'}</span></div></div>`}).join('')
+  grid.innerHTML=filtered.map((m,i)=>{const st=getStatus(m.quantity||0);return`<div class="med-card" style="animation-delay:${i*.03}s">
+    <div class="med-top"><div class="med-name">${m.name}</div><span class="badge ${st.cls}">${st.label}</span></div>
+    <div class="med-cat">${m.category||'Uncategorised'}</div>
+    <div class="med-footer"><span class="med-qty">${m.quantity||0} units · ${timeAgo(m.updated_at)}</span><span class="med-price">${m.price_usd?'$'+parseFloat(m.price_usd).toFixed(2):'—'}</span></div>
+  </div>`}).join('');
 }
 async function loadPharmacy(){
   const page=document.getElementById('page');
@@ -117,27 +123,30 @@ async function loadPharmacy(){
     const[pharmacy,medicines]=await Promise.all([supaFetch('pharmacies?select=*&id=eq.'+pharmacyId+'&limit=1'),supaFetch('medicines?select=*&pharmacy_id=eq.'+pharmacyId+'&order=name')]);
     if(!pharmacy||!pharmacy.length){page.innerHTML='<div class="state-box">Pharmacy not found. <a href="index.html" style="color:var(--green)">Go back</a></div>';return}
     const p=pharmacy[0];allMedicines=medicines||[];
-    document.title=p.name+' — MediFind';
-    let distHtml='';
-    if(userLat&&p.latitude&&p.longitude){const dist=getDistanceKm(userLat,userLng,parseFloat(p.latitude),parseFloat(p.longitude));distHtml=`<span class="profile-tag green">${formatDist(dist)}</span>`}
+    document.title=p.name+' — PharmFinderz';
+    let distTag='';
+    if(userLat&&p.latitude&&p.longitude){const d=getDistKm(userLat,userLng,parseFloat(p.latitude),parseFloat(p.longitude));distTag='<span class="profile-tag green">'+fmtDist(d)+'</span>'}
     const inStock=allMedicines.filter(m=>getStatus(m.quantity||0).key==='in').length;
     const lowStock=allMedicines.filter(m=>getStatus(m.quantity||0).key==='low').length;
     const outStock=allMedicines.filter(m=>getStatus(m.quantity||0).key==='out').length;
     const days=(p.operating_days||[]).join(', ')||'—';
-    const mapUrl=p.latitude&&p.longitude?`https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`:`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent((p.name||'')+' '+(p.city||''))}`;
-    function isOpenNow(){if(!p.opens_at||!p.closes_at)return null;const now=new Date(),oh=parseInt(p.opens_at),om=parseInt(p.opens_at.split(':')[1]),ch=parseInt(p.closes_at),cm=parseInt(p.closes_at.split(':')[1]),nowMins=now.getHours()*60+now.getMinutes(),openMins=oh*60+om,closeMins=ch*60+cm;return nowMins>=openMins&&nowMins<closeMins}
-    const openStatus=isOpenNow();
-    const openTag=openStatus===true?'<span class="profile-tag green">Open now</span>':openStatus===false?'<span class="profile-tag amber">Closed now</span>':'';
+    const mapUrl=p.latitude&&p.longitude?'https://www.google.com/maps/search/?api=1&query='+p.latitude+','+p.longitude:'https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((p.name||'')+' '+(p.city||''));
+    function isOpen(){if(!p.opens_at||!p.closes_at)return null;const now=new Date(),oh=parseInt(p.opens_at),om=parseInt(p.opens_at.split(':')[1]),ch=parseInt(p.closes_at),cm=parseInt(p.closes_at.split(':')[1]),nm=now.getHours()*60+now.getMinutes();return nm>=(oh*60+om)&&nm<(ch*60+cm)}
+    const op=isOpen();
+    const openTag=op===true?'<span class="profile-tag green">Open now</span>':op===false?'<span class="profile-tag amber">Closed now</span>':'';
     page.innerHTML=`
       <div class="profile-hero">
         <div class="profile-icon">${(p.name||'?').charAt(0).toUpperCase()}</div>
         <div class="profile-info">
-          <div class="profile-name">${p.name}</div>
-          <div class="profile-detail"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>${[p.street,p.suburb,p.city].filter(Boolean).join(', ')}${p.landmark?' · Near '+p.landmark:''}</div>
-          ${p.phone?`<div class="profile-detail"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg><a href="tel:${p.phone}" style="color:var(--green);text-decoration:none">${p.phone}</a></div>`:''}
-          ${p.opens_at?`<div class="profile-detail"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>${p.opens_at.slice(0,5)} – ${(p.closes_at||'').slice(0,5)} · ${days}</div>`:''}
-          <div class="profile-tags">${openTag}${distHtml}${p.offers_delivery?'<span class="profile-tag green">Offers delivery</span>':''}</div>
-          <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>Get directions</a>
+          <div class="profile-name">${p.name}${p.plan==='premium'?' ⭐':''}</div>
+          <div class="profile-detail">${[p.street,p.suburb,p.city].filter(Boolean).join(', ')}${p.landmark?' · Near '+p.landmark:''}</div>
+          ${p.phone?'<div class="profile-detail"><a href="tel:'+p.phone+'" style="color:var(--green);text-decoration:none">'+p.phone+'</a></div>':''}
+          ${p.opens_at?'<div class="profile-detail">'+p.opens_at.slice(0,5)+' – '+((p.closes_at||'').slice(0,5))+' · '+days+'</div>':''}
+          <div class="profile-tags">${openTag}${distTag}${p.offers_delivery?'<span class="profile-tag green">Offers delivery</span>':''}</div>
+          <a class="map-link" href="${mapUrl}" target="_blank" rel="noopener">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+            Get directions
+          </a>
         </div>
       </div>
       <div class="profile-stats">
@@ -147,12 +156,12 @@ async function loadPharmacy(){
       </div>
       <p class="section-label">All medicines (${allMedicines.length})</p>
       <div class="toolbar">
-        <input type="text" id="med-search" placeholder="Search medicines…" oninput="renderMedicines()" />
+        <input type="text" id="med-search" placeholder="Search medicines…" oninput="renderMedicines()"/>
         <select id="med-filter" onchange="renderMedicines()"><option value="">All statuses</option><option value="in">In stock</option><option value="low">Low stock</option><option value="out">Out of stock</option></select>
       </div>
       <div class="med-grid" id="med-grid"></div>`;
     renderMedicines();
-  }catch(e){page.innerHTML=`<div class="state-box">Failed to load pharmacy: ${e.message}<br><a href="index.html" style="color:var(--green)">Go back</a></div>`}
+  }catch(e){page.innerHTML='<div class="state-box">Failed to load: '+e.message+' <a href="index.html" style="color:var(--green)">Go back</a></div>'}
 }
 loadPharmacy();
 </script>

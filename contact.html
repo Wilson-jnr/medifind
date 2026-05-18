@@ -1,145 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Contact — MediFind Zimbabwe</title>
-  <meta name="description" content="Contact MediFind Zimbabwe — get in touch for pharmacy registration, premium plans, or general enquiries." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500;600&family=DM+Sans:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact — PharmFinderz Zimbabwe</title>
+  <meta name="description" content="Contact PharmFinderz Zimbabwe — pharmacy registration, premium plans, advertising, or general enquiries."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@400;500&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
-    :root {
-      --green: #1D9E75; --green-dark: #0F6E56; --green-light: #E1F5EE; --green-mid: #9FE1CB; --green-text: #085041;
-      --amber-bg: #FAEEDA; --amber-text: #854F0B;
-      --red-bg: #FCEBEB; --red-text: #A32D2D;
-      --ink: #1a1a1a; --ink-mid: #555; --ink-light: #888;
-      --surface: #f7f6f2; --card: #ffffff; --border: #e5e3dc; --border-mid: #ccc9c0;
-      --radius: 12px; --radius-sm: 8px;
-    }
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); min-height: 100vh; }
-    nav { background: var(--card); border-bottom: 1px solid var(--border); padding: 0 2rem; height: 60px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; }
-    .nav-logo { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 600; color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px; }
-    .nav-logo span { color: var(--green); }
-    .nav-back { font-size: 14px; color: var(--ink-mid); text-decoration: none; padding: 7px 12px; border-radius: var(--radius-sm); }
-    .nav-back:hover { background: var(--surface); }
+    :root{--green:#1D9E75;--green-dk:#0F6E56;--green-lt:#E1F5EE;--green-md:#9FE1CB;--green-tx:#085041;--red-bg:#FCEBEB;--red-tx:#A32D2D;--ink:#1a1a1a;--ink2:#555;--ink3:#888;--bg:#f7f6f2;--card:#fff;--bd:#e5e3dc;--bd2:#ccc9c0;--r:12px;--rs:8px}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    html{-webkit-text-size-adjust:100%}
+    body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
+    nav{background:var(--card);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;position:sticky;top:0;z-index:100;gap:8px}
+    .nav-logo{font-family:'Fraunces',serif;font-size:18px;font-weight:500;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;flex-shrink:0}
+    .nav-logo span{color:var(--green)}
+    .nav-back{font-size:13px;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:var(--rs);white-space:nowrap}
+    .nav-back:hover{background:var(--bg)}
 
-    .page { max-width: 800px; margin: 3rem auto; padding: 0 1.5rem 5rem; display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; align-items: start; }
-    .page-left { }
-    .page-label { font-size: 11px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-light); margin-bottom: 0.5rem; }
-    h1 { font-family: 'Fraunces', serif; font-size: 32px; font-weight: 500; letter-spacing: -0.5px; margin-bottom: 1rem; line-height: 1.2; }
-    .page-sub { font-size: 15px; color: var(--ink-mid); line-height: 1.7; margin-bottom: 2rem; }
+    .page{max-width:800px;margin:2.5rem auto;padding:0 1.25rem 4rem;display:grid;grid-template-columns:1fr 1.3fr;gap:2rem;align-items:start}
+    @media(max-width:640px){.page{grid-template-columns:1fr;gap:1.5rem;margin:1.5rem auto}}
 
-    .contact-methods { display: flex; flex-direction: column; gap: 12px; }
-    .contact-method { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.125rem 1.25rem; display: flex; align-items: flex-start; gap: 12px; text-decoration: none; color: inherit; transition: border-color 0.15s; }
-    .contact-method:hover { border-color: var(--border-mid); }
-    .contact-method-icon { width: 38px; height: 38px; border-radius: 9px; background: var(--green-light); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .contact-method-label { font-size: 12px; color: var(--ink-light); margin-bottom: 3px; }
-    .contact-method-value { font-size: 14px; font-weight: 500; color: var(--ink); }
-    .contact-method-desc { font-size: 12px; color: var(--ink-mid); margin-top: 2px; }
+    .page-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:.5rem}
+    h1{font-family:'Fraunces',serif;font-size:clamp(22px,5vw,28px);font-weight:500;margin-bottom:.75rem;line-height:1.2}
+    .page-sub{font-size:14px;color:var(--ink2);line-height:1.7;margin-bottom:1.5rem}
 
-    .topics { margin-top: 2rem; }
-    .topics h3 { font-size: 13px; font-weight: 500; color: var(--ink-light); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 0.75rem; }
-    .topic-tag { display: inline-block; font-size: 13px; padding: 5px 12px; border-radius: 99px; border: 1px solid var(--border-mid); color: var(--ink-mid); margin: 0 4px 6px 0; }
+    .contact-methods{display:flex;flex-direction:column;gap:10px;margin-bottom:1.5rem}
+    .contact-method{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:1rem;display:flex;align-items:flex-start;gap:10px;text-decoration:none;color:inherit}
+    .contact-method:hover{border-color:var(--bd2)}
+    .contact-icon{width:36px;height:36px;border-radius:var(--rs);background:var(--green-lt);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+    .contact-label{font-size:11px;color:var(--ink3);margin-bottom:2px}
+    .contact-value{font-size:14px;font-weight:500;color:var(--ink)}
+    .contact-desc{font-size:12px;color:var(--ink2);margin-top:2px}
 
-    /* Form */
-    .form-card { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.75rem; }
-    .form-title { font-family: 'Fraunces', serif; font-size: 20px; font-weight: 500; margin-bottom: 1.25rem; }
-    .field { margin-bottom: 1rem; }
-    .field label { font-size: 13px; font-weight: 500; display: block; margin-bottom: 5px; }
-    .field input, .field select, .field textarea { width: 100%; font-family: 'DM Sans', sans-serif; font-size: 14px; border: 1px solid var(--border-mid); border-radius: var(--radius-sm); background: var(--card); color: var(--ink); padding: 0 12px; height: 40px; transition: border-color 0.15s; }
-    .field textarea { height: 120px; padding: 10px 12px; resize: vertical; }
-    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--green); }
-    .btn-submit { width: 100%; height: 42px; border-radius: var(--radius-sm); background: var(--green); color: #fff; border: none; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; cursor: pointer; transition: background 0.15s; }
-    .btn-submit:hover { background: var(--green-dark); }
-    .btn-submit:disabled { background: var(--border-mid); cursor: not-allowed; }
-    .success-msg { background: var(--green-light); border: 1px solid var(--green-mid); border-radius: var(--radius-sm); padding: 1rem 1.25rem; font-size: 14px; color: var(--green-text); display: none; margin-top: 1rem; }
-    .error-msg { background: var(--red-bg); border: 1px solid #F09595; border-radius: var(--radius-sm); padding: 1rem 1.25rem; font-size: 14px; color: var(--red-text); display: none; margin-top: 1rem; }
+    .topics h3{font-size:11px;font-weight:500;color:var(--ink3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:.625rem}
+    .topic-tags{display:flex;flex-wrap:wrap;gap:6px}
+    .topic-tag{font-size:12px;padding:5px 11px;border-radius:99px;border:1px solid var(--bd2);color:var(--ink2)}
 
-    .spinner { display: inline-block; width: 15px; height: 15px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: -3px; margin-right: 4px; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    footer { border-top: 1px solid var(--border); padding: 2rem; text-align: center; font-size: 12px; color: var(--ink-light); max-width: 100%; }
-    footer a { color: var(--ink-mid); text-decoration: none; margin: 0 8px; }
-    footer a:hover { color: var(--ink); }
-
-    @media (max-width: 640px) {
-      nav { padding: 0 1rem; height: 56px; }
-      .nav-back { font-size: 13px; }
-      .page { grid-template-columns: 1fr; margin: 1.5rem auto; padding: 0 1rem 3rem; gap: 1.5rem; }
-      h1 { font-size: 24px; }
-      .page-sub { font-size: 14px; }
-      .form-card { padding: 1.25rem 1rem; }
-      .field input, .field select, .field textarea { font-size: 16px; }
-      .contact-method { padding: 0.875rem 1rem; }
-      footer { padding: 1.5rem 1rem; }
-      footer a { display: inline-block; margin: 2px 6px; }
-    }
+    .form-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:1.5rem 1.25rem}
+    .form-title{font-family:'Fraunces',serif;font-size:18px;font-weight:500;margin-bottom:1.25rem}
+    .field{margin-bottom:.875rem}
+    .field label{font-size:13px;font-weight:500;display:block;margin-bottom:5px}
+    .field input,.field select,.field textarea{width:100%;font-family:'DM Sans',sans-serif;font-size:16px;border:1px solid var(--bd2);border-radius:var(--rs);background:var(--card);color:var(--ink);padding:0 12px;height:42px;-webkit-appearance:none;transition:border-color .15s}
+    .field textarea{height:110px;padding:10px 12px;resize:vertical;font-size:15px}
+    .field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--green)}
+    .btn-submit{width:100%;height:44px;border-radius:var(--rs);background:var(--green);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer}
+    .btn-submit:hover{background:var(--green-dk)}
+    .btn-submit:disabled{background:var(--bd2);cursor:not-allowed}
+    .success-msg{background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rs);padding:.875rem 1rem;font-size:13px;color:var(--green-tx);display:none;margin-top:1rem;line-height:1.6}
+    .error-msg{background:var(--red-bg);border:1px solid #F09595;border-radius:var(--rs);padding:.875rem 1rem;font-size:13px;color:var(--red-tx);display:none;margin-top:1rem}
+    .spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:-2px;margin-right:4px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    footer{text-align:center;padding:1.75rem 1.25rem;font-size:12px;color:var(--ink3);border-top:1px solid var(--bd);line-height:2}
+    footer a{color:var(--ink2);text-decoration:none;margin:0 6px}
   </style>
 </head>
 <body>
-
 <nav>
   <a class="nav-logo" href="index.html">
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
-    Medi<span>Find</span>
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+    Pharm<span>Finderz</span>
   </a>
-  <a class="nav-back" href="index.html">← Back to homepage</a>
+  <a class="nav-back" href="index.html">← Home</a>
 </nav>
 
 <div class="page">
-  <div class="page-left">
+  <div>
     <p class="page-label">Get in touch</p>
     <h1>We'd love to hear from you</h1>
-    <p class="page-sub">Whether you're a pharmacy owner, a patient with feedback, or interested in advertising — reach out and we'll get back to you.</p>
+    <p class="page-sub">Whether you're a pharmacy owner, a patient with feedback, or interested in advertising — reach out and we'll get back to you within 24 hours.</p>
 
     <div class="contact-methods">
-      <a class="contact-method" href="mailto:admin@medifind.co.zw">
-        <div class="contact-method-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-        </div>
+      <a class="contact-method" href="mailto:admin@pharmfinderz.co.zw">
+        <div class="contact-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
         <div>
-          <div class="contact-method-label">Email us</div>
-          <div class="contact-method-value">admin@medifind.co.zw</div>
-          <div class="contact-method-desc">We respond within 24 hours</div>
+          <div class="contact-label">Email us</div>
+          <div class="contact-value">admin@pharmfinderz.co.zw</div>
+          <div class="contact-desc">We respond within 24 hours</div>
         </div>
       </a>
-
       <a class="contact-method" href="register.html">
-        <div class="contact-method-icon">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-        </div>
+        <div class="contact-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg></div>
         <div>
-          <div class="contact-method-label">Register a pharmacy</div>
-          <div class="contact-method-value">Join MediFind for free</div>
-          <div class="contact-method-desc">Takes less than 5 minutes</div>
+          <div class="contact-label">Register a pharmacy</div>
+          <div class="contact-value">Join PharmFinderz for free</div>
+          <div class="contact-desc">Takes less than 5 minutes</div>
         </div>
       </a>
     </div>
 
     <div class="topics">
       <h3>Common enquiries</h3>
-      <span class="topic-tag">Pharmacy registration</span>
-      <span class="topic-tag">Premium plans</span>
-      <span class="topic-tag">Advertising</span>
-      <span class="topic-tag">Technical support</span>
-      <span class="topic-tag">Partnerships</span>
-      <span class="topic-tag">Data requests</span>
+      <div class="topic-tags">
+        <span class="topic-tag">Pharmacy registration</span>
+        <span class="topic-tag">Premium plans</span>
+        <span class="topic-tag">Advertising</span>
+        <span class="topic-tag">Technical support</span>
+        <span class="topic-tag">Partnerships</span>
+        <span class="topic-tag">Data requests</span>
+      </div>
     </div>
   </div>
 
   <div class="form-card">
     <p class="form-title">Send us a message</p>
-    <div class="field">
-      <label>Your name</label>
-      <input type="text" id="c-name" placeholder="Full name" />
-    </div>
-    <div class="field">
-      <label>Email address</label>
-      <input type="email" id="c-email" placeholder="your@email.com" />
-    </div>
-    <div class="field">
-      <label>Subject</label>
+    <div class="field"><label>Your name</label><input type="text" id="c-name" placeholder="Full name"/></div>
+    <div class="field"><label>Email address</label><input type="email" id="c-email" placeholder="your@email.com"/></div>
+    <div class="field"><label>Subject</label>
       <select id="c-subject">
         <option value="">Select a topic…</option>
         <option>Pharmacy registration help</option>
@@ -152,69 +119,33 @@
         <option>Other</option>
       </select>
     </div>
-    <div class="field">
-      <label>Message</label>
-      <textarea id="c-message" placeholder="Tell us how we can help…"></textarea>
-    </div>
+    <div class="field"><label>Message</label><textarea id="c-message" placeholder="Tell us how we can help…"></textarea></div>
     <button class="btn-submit" id="submit-btn" onclick="submitForm()">Send message</button>
-    <div class="success-msg" id="success-msg">
-      ✓ Thank you! Your message has been sent. We'll get back to you within 24 hours.
-    </div>
-    <div class="error-msg" id="error-msg">
-      Please fill in your name, email and message before sending.
-    </div>
+    <div class="success-msg" id="success-msg">✓ Thank you! Your message has been sent. We'll get back to you within 24 hours.</div>
+    <div class="error-msg" id="error-msg">Please fill in your name, email and message before sending.</div>
   </div>
 </div>
 
 <footer>
-  <p>© 2026 MediFind Zimbabwe</p>
-  <p style="margin-top:8px">
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="privacy.html">Privacy Policy</a>
-    <a href="contact.html">Contact</a>
-    <a href="register.html">Register your pharmacy</a>
-  </p>
+  <p>© 2026 PharmFinderz Zimbabwe</p>
+  <p><a href="index.html">Home</a><a href="about.html">About</a><a href="privacy.html">Privacy Policy</a><a href="contact.html">Contact</a><a href="register.html">Register pharmacy</a></p>
 </footer>
 
 <script>
-  function submitForm() {
-    const name    = document.getElementById('c-name').value.trim();
-    const email   = document.getElementById('c-email').value.trim();
-    const subject = document.getElementById('c-subject').value;
-    const message = document.getElementById('c-message').value.trim();
-    const errMsg  = document.getElementById('error-msg');
-    const sucMsg  = document.getElementById('success-msg');
-    const btn     = document.getElementById('submit-btn');
-
-    if (!name || !email || !message) {
-      errMsg.style.display = 'block';
-      sucMsg.style.display = 'none';
-      return;
-    }
-
-    errMsg.style.display = 'none';
-    btn.disabled = true;
-    btn.innerHTML = '<span class="spinner"></span> Sending…';
-
-    // Build mailto link as fallback since no backend email service yet
-    const body = encodeURIComponent(
-      'Name: ' + name + '\n' +
-      'Email: ' + email + '\n' +
-      'Subject: ' + (subject || 'General') + '\n\n' +
-      message
-    );
-    const mailtoLink = 'mailto:admin@medifind.co.zw?subject=' +
-      encodeURIComponent('MediFind enquiry: ' + (subject || 'General')) +
-      '&body=' + body;
-
-    setTimeout(() => {
-      window.location.href = mailtoLink;
-      btn.disabled = false;
-      btn.textContent = 'Send message';
-      sucMsg.style.display = 'block';
-    }, 800);
-  }
+function submitForm(){
+  const name=document.getElementById('c-name').value.trim();
+  const email=document.getElementById('c-email').value.trim();
+  const subject=document.getElementById('c-subject').value;
+  const message=document.getElementById('c-message').value.trim();
+  const err=document.getElementById('error-msg');
+  const suc=document.getElementById('success-msg');
+  const btn=document.getElementById('submit-btn');
+  if(!name||!email||!message){err.style.display='block';suc.style.display='none';return}
+  err.style.display='none';btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending…';
+  const body=encodeURIComponent('Name: '+name+'\nEmail: '+email+'\nSubject: '+(subject||'General')+'\n\n'+message);
+  const mailto='mailto:admin@pharmfinderz.co.zw?subject='+encodeURIComponent('PharmFinderz enquiry: '+(subject||'General'))+'&body='+body;
+  setTimeout(()=>{window.location.href=mailto;btn.disabled=false;btn.textContent='Send message';suc.style.display='block'},800);
+}
 </script>
 </body>
 </html>
