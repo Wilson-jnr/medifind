@@ -199,6 +199,22 @@
   <p class="meta-note">Changes save instantly and are visible to patients straight away.</p>
 </div>
 
+<!-- BULK IMPORT MODAL -->
+<div class="modal-bg" id="import-bg">
+  <div class="modal">
+    <p class="modal-title">⬆ Bulk import medicines</p>
+    <p style="font-size:13px;color:var(--ink2);margin-bottom:.75rem;line-height:1.6">Paste your medicine list below — one per line in this format:</p>
+    <code style="display:block;background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:8px 12px;font-size:12px;line-height:1.8;margin-bottom:.875rem;color:var(--ink2)">Medicine name, quantity, price<br>Paracetamol 500mg, 100, 0.80<br>Amoxicillin 250mg, 50, 2.50<br>Metformin 500mg, 0, 1.20</code>
+    <div class="field"><textarea id="import-text" rows="6" style="font-family:monospace;font-size:13px" placeholder="Paste your list here…"></textarea></div>
+    <div class="error-banner" id="import-error"></div>
+    <div id="import-progress" style="display:none;font-size:13px;color:var(--green-tx);margin-top:.5rem;line-height:1.6"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeImportModal()">Cancel</button>
+      <button class="btn-save" id="btn-import-save" onclick="runImport()">Import</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL -->
 <div class="modal-bg" id="modal-bg">
   <div class="modal">
@@ -376,6 +392,40 @@ function showToast(msg,isErr=false){
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.display='none'},3000);
 }
 document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.getElementById('import-bg').addEventListener('click',function(e){if(e.target===this)closeImportModal()});
+function openBulkModal(){document.getElementById('import-text').value='';document.getElementById('import-error').style.display='none';document.getElementById('import-progress').style.display='none';document.getElementById('btn-import-save').disabled=false;document.getElementById('btn-import-save').textContent='Import';document.getElementById('import-bg').classList.add('open')}
+function closeImportModal(){document.getElementById('import-bg').classList.remove('open')}
+async function runImport(){
+  const text=document.getElementById('import-text').value.trim();
+  const err=document.getElementById('import-error');
+  const progress=document.getElementById('import-progress');
+  const btn=document.getElementById('btn-import-save');
+  if(!text){err.textContent='Please paste your medicine list first.';err.style.display='block';return}
+  if(!pharmacyId){err.textContent='No pharmacy linked to your account.';err.style.display='block';return}
+  err.style.display='none';
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>';
+  progress.style.display='block';
+  let added=0,failed=0;
+  for(let i=0;i<lines.length;i++){
+    const parts=lines[i].split(',').map(p=>p.trim());
+    const name=parts[0];
+    const qty=parseInt(parts[1])||0;
+    const price=parseFloat(parts[2])||null;
+    if(!name){failed++;continue}
+    progress.textContent='Importing '+name+' ('+( i+1)+' of '+lines.length+')…';
+    try{
+      const result=await supaFetch('/rest/v1/medicines',{method:'POST',headers:{'Prefer':'return=representation'},body:JSON.stringify({name,quantity:qty,price_usd:price,pharmacy_id:pharmacyId,updated_at:new Date().toISOString()})});
+      if(result&&result[0])medicines.push(result[0]);
+      added++;
+    }catch(e){failed++}
+  }
+  progress.textContent='✓ Done! '+added+' medicines imported'+(failed>0?', '+failed+' failed':'')+'.'
+  btn.disabled=false;btn.textContent='Import';
+  renderTable();
+  showToast(added+' medicines imported successfully');
+  setTimeout(()=>closeImportModal(),2000);
+}
 document.getElementById('bulk-modal-bg').addEventListener('click',function(e){if(e.target===this)closeBulkModal()});
 
 function openBulkModal(){

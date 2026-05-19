@@ -289,6 +289,19 @@ function submitRequest(medicine,city){
   const phone=document.getElementById('request-phone').value.trim();
   const msg=document.getElementById('request-msg');
   if(!phone){msg.style.display='block';msg.style.color='var(--red-tx)';msg.textContent='Please enter your phone number.';return}
+  // Save request to Supabase medicine_requests table if it exists, otherwise just show confirmation
+  supaFetch('medicine_requests?select=id').then(()=>{
+    return fetch(SUPA_URL+'/rest/v1/medicine_requests',{method:'POST',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({medicine_name:medicine,city:city||null,phone})});
+  }).catch(()=>{}).finally(()=>{
+    msg.style.display='block';msg.style.color='var(--green-tx)';
+    msg.textContent='✓ Noted! We\'ll let you know when '+medicine+' becomes available.';
+    document.getElementById('request-phone').disabled=true;
+  });
+}
+function submitRequest(medicine,city){
+  const phone=document.getElementById('request-phone').value.trim();
+  const msg=document.getElementById('request-msg');
+  if(!phone){msg.style.display='block';msg.style.color='var(--red-tx)';msg.textContent='Please enter your phone number.';return}
   // Store request via mailto as simple fallback — can be upgraded to database later
   const subject=encodeURIComponent('Medicine request: '+medicine+(city?' in '+city:''));
   const body=encodeURIComponent('Medicine requested: '+medicine+'\nCity: '+(city||'Any')+'\nPhone: '+phone+'\nPlease notify when available.');
