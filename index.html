@@ -3,115 +3,128 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>PharmFinderz — Find Medicine Near You</title>
+  <title>PharmFinderz — Find Medicine Near You in Zimbabwe</title>
   <meta name="description" content="Search medicines and find which pharmacies near you have them in stock. Free for patients. Real-time stock updates from pharmacies across Zimbabwe."/>
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,500;1,400&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     :root{
       --green:#1D9E75;--green-dk:#0F6E56;--green-lt:#E1F5EE;--green-md:#9FE1CB;--green-tx:#085041;
-      --amber-bg:#FAEEDA;--amber-tx:#854F0B;--red-bg:#FCEBEB;--red-tx:#A32D2D;
-      --ink:#1a1a1a;--ink2:#555;--ink3:#888;
-      --bg:#f7f6f2;--card:#fff;--bd:#e5e3dc;--bd2:#ccc9c0;
-      --r:12px;--rs:8px;
+      --amber-bg:#FFF3E0;--amber-tx:#E65100;
+      --red-bg:#FCEBEB;--red-tx:#A32D2D;
+      --ink:#111827;--ink2:#4B5563;--ink3:#9CA3AF;
+      --bg:#F9FAFB;--card:#FFFFFF;--bd:#E5E7EB;--bd2:#D1D5DB;
+      --r:16px;--rs:10px;--shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
     }
     *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
     html{-webkit-text-size-adjust:100%}
     body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;overflow-x:hidden}
 
     /* NAV */
-    nav{background:var(--card);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 1rem;position:sticky;top:0;z-index:100;gap:8px}
-    .nav-logo{font-family:'Fraunces',serif;font-size:20px;font-weight:500;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:7px;white-space:nowrap;flex-shrink:0}
+    nav{background:var(--card);border-bottom:1px solid var(--bd);height:60px;display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;position:sticky;top:0;z-index:100;gap:12px;box-shadow:var(--shadow)}
+    .nav-logo{font-family:'Fraunces',serif;font-size:21px;font-weight:500;color:var(--ink);text-decoration:none;display:flex;align-items:center;gap:8px;white-space:nowrap;flex-shrink:0}
     .nav-logo span{color:var(--green)}
-    .nav-logo svg{width:20px;height:20px;flex-shrink:0}
+    .nav-logo svg{width:22px;height:22px;flex-shrink:0}
     .nav-links{display:flex;align-items:center;gap:4px;flex-shrink:0}
-    .nav-link{font-size:13px;color:var(--ink2);text-decoration:none;padding:6px 10px;border-radius:var(--rs);white-space:nowrap}
-    .nav-link:hover{background:var(--bg)}
-    .nav-btn{font-size:13px;font-weight:500;color:#fff;background:var(--green);text-decoration:none;padding:7px 14px;border-radius:var(--rs);white-space:nowrap}
+    .nav-link{font-size:14px;color:var(--ink2);text-decoration:none;padding:7px 12px;border-radius:var(--rs);white-space:nowrap;transition:background .15s}
+    .nav-link:hover{background:var(--bg);color:var(--ink)}
+    .nav-btn{font-size:14px;font-weight:500;color:#fff;background:var(--green);text-decoration:none;padding:8px 18px;border-radius:var(--rs);white-space:nowrap;transition:background .15s}
     .nav-btn:hover{background:var(--green-dk)}
-    @media(max-width:600px){
-      .nav-link{display:none}
-      .nav-btn{padding:6px 10px;font-size:12px}
-      .nav-logo{font-size:18px}
-    }
+    @media(max-width:620px){.nav-link{display:none}.nav-btn{padding:7px 12px;font-size:13px}.nav-logo{font-size:19px}}
 
     /* HERO */
-    .hero{max-width:640px;margin:3rem auto 2rem;padding:0 1.25rem;text-align:center}
-    .hero-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:var(--green);background:var(--green-lt);border:1px solid var(--green-md);padding:4px 11px;border-radius:99px;margin-bottom:1.25rem;letter-spacing:.04em;text-transform:uppercase}
-    .hero h1{font-family:'Fraunces',serif;font-size:clamp(1.75rem,6vw,2.75rem);font-weight:500;line-height:1.15;color:var(--ink);margin-bottom:.875rem}
-    .hero h1 em{font-style:italic;color:var(--green)}
-    .hero p{font-size:clamp(14px,3.5vw,16px);color:var(--ink2);line-height:1.7;margin-bottom:1.75rem}
+    .hero{background:linear-gradient(160deg,#0a4f38 0%,#1D9E75 100%);padding:3.5rem 1.5rem 3rem;text-align:center}
+    .hero-tag{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:500;color:rgba(255,255,255,.85);background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);padding:4px 12px;border-radius:99px;margin-bottom:1.25rem;letter-spacing:.06em;text-transform:uppercase}
+    .hero h1{font-family:'Fraunces',serif;font-size:clamp(1.875rem,6vw,3rem);font-weight:500;line-height:1.12;color:#fff;margin-bottom:.875rem;max-width:600px;margin-left:auto;margin-right:auto}
+    .hero h1 em{font-style:italic;color:var(--green-md)}
+    .hero p{font-size:clamp(14px,3.5vw,17px);color:rgba(255,255,255,.8);line-height:1.7;margin-bottom:2rem;max-width:480px;margin-left:auto;margin-right:auto}
 
-    /* SEARCH */
-    .search-wrap{display:flex;flex-direction:column;gap:8px;width:100%;max-width:520px;margin:0 auto 1rem}
-    .search-row{display:flex;gap:8px}
-    .search-wrap input{flex:1;min-width:0;height:48px;padding:0 14px;border-radius:var(--rs);border:1.5px solid var(--bd2);background:var(--card);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);width:100%}
-    .search-wrap input:focus{outline:none;border-color:var(--green)}
-    .search-wrap input::placeholder{color:var(--ink3)}
-    #city-filter{height:48px;padding:0 10px;border-radius:var(--rs);border:1.5px solid var(--bd2);background:var(--card);font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);flex-shrink:0;max-width:130px}
-    #city-filter:focus{outline:none;border-color:var(--green)}
-    .search-btn{height:48px;padding:0 20px;border-radius:var(--rs);background:var(--green);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;gap:6px;white-space:nowrap;flex-shrink:0}
+    /* SEARCH BOX */
+    .search-card{background:var(--card);border-radius:var(--r);padding:1.25rem;max-width:580px;margin:0 auto;box-shadow:0 8px 32px rgba(0,0,0,.15)}
+    .search-row{display:flex;gap:8px;margin-bottom:10px}
+    .search-input{flex:1;min-width:0;height:48px;padding:0 14px;border-radius:var(--rs);border:1.5px solid var(--bd2);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:16px;color:var(--ink);transition:border-color .15s}
+    .search-input:focus{outline:none;border-color:var(--green);background:var(--card)}
+    .search-input::placeholder{color:var(--ink3)}
+    .city-select{height:48px;padding:0 10px;border-radius:var(--rs);border:1.5px solid var(--bd2);background:var(--bg);font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink);flex-shrink:0;min-width:110px;-webkit-appearance:none;cursor:pointer}
+    .city-select:focus{outline:none;border-color:var(--green)}
+    .search-btn{width:100%;height:46px;border-radius:var(--rs);background:var(--green);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .15s}
     .search-btn:hover{background:var(--green-dk)}
     .search-btn:disabled{background:var(--bd2);cursor:not-allowed}
-    @media(max-width:480px){
-      .search-row{flex-direction:column}
-      #city-filter{max-width:100%;width:100%}
-      .search-btn{width:100%;justify-content:center}
-    }
+    @media(max-width:480px){.search-row{flex-direction:column}.city-select{width:100%;min-width:0}}
 
     /* PILLS */
-    .pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:.5rem}
-    .pill{font-size:12px;padding:5px 11px;border-radius:99px;border:1px solid var(--bd2);color:var(--ink2);background:var(--card);cursor:pointer;font-family:'DM Sans',sans-serif}
-    .pill:hover{border-color:var(--green);color:var(--green);background:var(--green-lt)}
-
-    /* MAIN */
-    main{max-width:880px;margin:0 auto;padding:0 1.25rem 4rem}
-    .section-label{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:.75rem}
-
-    /* RESULTS */
-    .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:2rem}
-    @media(max-width:480px){.results-grid{grid-template-columns:1fr}}
-    .med-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:.875rem 1rem;animation:fadeUp .25s ease both;cursor:pointer;color:inherit}
-    .med-card:hover{border-color:var(--green);transform:translateY(-1px);transition:all .15s}
-    @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-    .med-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:6px}
-    .med-name{font-size:14px;font-weight:500;color:var(--ink);word-break:break-word}
-    .badge{font-size:11px;padding:3px 8px;border-radius:99px;white-space:nowrap;font-weight:500;flex-shrink:0}
-    .badge-in{background:var(--green-lt);color:var(--green-tx)}
-    .badge-low{background:var(--amber-bg);color:var(--amber-tx)}
-    .badge-out{background:var(--red-bg);color:var(--red-tx)}
-    .med-pharmacy{font-size:12px;color:var(--ink2);margin-bottom:3px;display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-    .med-meta{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
-
-    /* PHARMACY LIST */
-    .pharmacy-list{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);overflow:hidden}
-    .pharmacy-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px;border-bottom:1px solid var(--bd);text-decoration:none;color:inherit}
-    .pharmacy-row:last-child{border-bottom:none}
-    .pharmacy-row:hover{background:var(--bg)}
-    .ph-info{min-width:0;flex:1}
-    .ph-name{font-size:14px;font-weight:500;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ph-addr{font-size:12px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-    .ph-count{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--green-lt);color:var(--green-tx);white-space:nowrap;font-weight:500;flex-shrink:0}
+    .pills{display:flex;gap:6px;justify-content:center;flex-wrap:wrap;margin-top:1rem}
+    .pill{font-size:12px;padding:5px 12px;border-radius:99px;border:1px solid rgba(255,255,255,.3);color:rgba(255,255,255,.85);background:rgba(255,255,255,.12);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all .15s}
+    .pill:hover{background:rgba(255,255,255,.25);border-color:rgba(255,255,255,.5);color:#fff}
 
     /* TRUST BAR */
-    .trust-bar{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--bd)}
-    .trust-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2)}
-    .trust-num{font-size:16px;font-weight:500;color:var(--ink)}
+    .trust-bar{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;padding:1.25rem 1.5rem;background:var(--card);border-bottom:1px solid var(--bd)}
+    .trust-item{display:flex;align-items:center;gap:7px;font-size:13px;color:var(--ink2)}
+    .trust-num{font-size:17px;font-weight:500;color:var(--ink)}
 
-    /* OPEN/CLOSED badge */
-    .badge-open{background:var(--green-lt);color:var(--green-tx)}
+    /* MAIN */
+    main{max-width:900px;margin:0 auto;padding:2rem 1.5rem 5rem}
+    @media(max-width:600px){main{padding:1.5rem 1rem 4rem}}
+    .section-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:1rem;flex-wrap:wrap}
+    .section-label{font-size:12px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;color:var(--ink3)}
+    .section-count{font-size:12px;color:var(--ink3)}
+
+    /* RESULTS GRID */
+    .results-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:2.5rem}
+    @media(max-width:500px){.results-grid{grid-template-columns:1fr}}
+
+    /* MEDICINE CARD */
+    .med-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);padding:1rem 1.125rem;text-decoration:none;color:inherit;display:block;transition:all .15s;box-shadow:var(--shadow);animation:fadeUp .25s ease both}
+    .med-card:hover{border-color:var(--green);box-shadow:0 4px 12px rgba(29,158,117,.15);transform:translateY(-2px)}
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+    .med-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:8px}
+    .med-name{font-size:14px;font-weight:500;color:var(--ink);word-break:break-word;line-height:1.4}
+    .badge{font-size:11px;padding:3px 9px;border-radius:99px;white-space:nowrap;font-weight:500;flex-shrink:0}
+    .badge-in{background:#DCFCE7;color:#166534}
+    .badge-low{background:var(--amber-bg);color:var(--amber-tx)}
+    .badge-out{background:var(--red-bg);color:var(--red-tx)}
+    .badge-open{background:#DCFCE7;color:#166534}
     .badge-closed{background:var(--amber-bg);color:var(--amber-tx)}
-    .state-box{text-align:center;padding:2.5rem 1rem;color:var(--ink3);font-size:14px;grid-column:1/-1}
-    .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bd2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-4px;margin-right:6px}
+    .med-divider{height:1px;background:var(--bd);margin:8px 0}
+    .med-ph-name{font-size:13px;font-weight:500;color:var(--ink);margin-bottom:3px}
+    .med-detail{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:5px;margin-top:4px;flex-wrap:wrap}
+    .med-call{display:inline-flex;align-items:center;gap:4px;margin-top:8px;font-size:12px;font-weight:500;color:var(--green);background:var(--green-lt);border:1px solid var(--green-md);padding:4px 10px;border-radius:99px;text-decoration:none}
+    .med-call:hover{background:var(--green-md)}
+
+    /* PHARMACY CARDS */
+    .pharmacy-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+    @media(max-width:500px){.pharmacy-grid{grid-template-columns:1fr}}
+    .ph-card{background:var(--card);border:1px solid var(--bd);border-radius:var(--r);text-decoration:none;color:inherit;display:flex;flex-direction:column;transition:all .15s;box-shadow:var(--shadow);overflow:hidden;animation:fadeUp .25s ease both}
+    .ph-card:hover{border-color:var(--green);box-shadow:0 4px 12px rgba(29,158,117,.15);transform:translateY(-2px)}
+    .ph-card-header{padding:1.125rem 1.125rem .875rem;display:flex;align-items:flex-start;gap:12px}
+    .ph-avatar{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--green) 0%,var(--green-dk) 100%);color:#fff;display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:19px;font-weight:500;flex-shrink:0}
+    .ph-card-info{flex:1;min-width:0}
+    .ph-card-name{font-size:15px;font-weight:500;color:var(--ink);margin-bottom:4px;line-height:1.3;word-break:break-word}
+    .ph-card-addr{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:4px;flex-wrap:wrap}
+    .ph-card-badges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}
+    .ph-card-footer{padding:.75rem 1.125rem;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:8px;background:#FAFAFA}
+    .ph-count-badge{font-size:12px;font-weight:500;color:var(--green-tx);background:var(--green-lt);border:1px solid var(--green-md);padding:3px 10px;border-radius:99px}
+    .ph-phone{font-size:12px;color:var(--green);font-weight:500;text-decoration:none;display:flex;align-items:center;gap:4px}
+    .ph-phone:hover{text-decoration:underline}
+    .ph-arrow{font-size:13px;color:var(--ink3);transition:transform .15s}
+    .ph-card:hover .ph-arrow{transform:translateX(3px);color:var(--green)}
+
+    /* STATES */
+    .state-box{text-align:center;padding:3rem 1rem;color:var(--ink3);font-size:14px;grid-column:1/-1}
+    .state-box svg{display:block;margin:0 auto .75rem;opacity:.3}
+    .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid var(--bd2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-4px;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
 
     /* FOOTER */
-    footer{text-align:center;padding:1.75rem 1.25rem;font-size:12px;color:var(--ink3);border-top:1px solid var(--bd);line-height:2}
-    footer a{color:var(--ink2);text-decoration:none;margin:0 6px}
-    footer a:hover{color:var(--ink)}
+    footer{text-align:center;padding:2rem 1.5rem;font-size:13px;color:var(--ink3);border-top:1px solid var(--bd);background:var(--card);line-height:2.2}
+    footer a{color:var(--ink2);text-decoration:none;margin:0 8px;transition:color .15s}
+    footer a:hover{color:var(--green)}
+    .footer-logo{font-family:'Fraunces',serif;font-size:17px;font-weight:500;color:var(--ink);margin-bottom:.5rem}
+    .footer-logo span{color:var(--green)}
   </style>
 </head>
 <body>
+
 <nav>
   <a class="nav-logo" href="index.html">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M9 3a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2h-2a2 2 0 0 1-2-2z"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
@@ -125,17 +138,19 @@
   </div>
 </nav>
 
+<!-- HERO -->
 <section class="hero">
   <div class="hero-tag">
     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
     Real-time stock · Zimbabwe
   </div>
-  <h1>Find your medicine <em>before</em> you leave home</h1>
-  <p>Search medicines and see which pharmacies near you have them in stock right now — updated by pharmacies in real time.</p>
-  <div class="search-wrap">
+  <h1>Find your medicine <em>before</em><br/>you leave home</h1>
+  <p>Search medicines and see which pharmacies near you have them in stock right now.</p>
+
+  <div class="search-card">
     <div class="search-row">
-      <input type="text" id="search-input" placeholder="e.g. Paracetamol, Amoxicillin…" onkeydown="if(event.key==='Enter')doSearch()"/>
-      <select id="city-filter" onchange="onCityChange()">
+      <input class="search-input" type="text" id="search-input" placeholder="e.g. Paracetamol, Amoxicillin…" onkeydown="if(event.key==='Enter')doSearch()"/>
+      <select class="city-select" id="city-filter" onchange="onCityChange()">
         <option value="">All cities</option>
         <option>Harare</option><option>Bulawayo</option><option>Mutare</option>
         <option>Gweru</option><option>Masvingo</option><option>Kwekwe</option>
@@ -143,10 +158,11 @@
       </select>
     </div>
     <button class="search-btn" id="search-btn" onclick="doSearch()">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      Search
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      Search medicines
     </button>
   </div>
+
   <div class="pills">
     <button class="pill" onclick="quickSearch('Paracetamol')">Paracetamol</button>
     <button class="pill" onclick="quickSearch('Amoxicillin')">Amoxicillin</button>
@@ -154,36 +170,51 @@
     <button class="pill" onclick="quickSearch('Ibuprofen')">Ibuprofen</button>
     <button class="pill" onclick="quickSearch('Cotrimoxazole')">Cotrimoxazole</button>
   </div>
-  <div class="trust-bar">
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
-      <span><span class="trust-num" id="trust-pharmacies">—</span> pharmacies</span>
-    </div>
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
-      <span><span class="trust-num" id="trust-medicines">—</span> medicines listed</span>
-    </div>
-    <div class="trust-item">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
-      <span>Updated in real time</span>
-    </div>
-  </div>
 </section>
 
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+    <span><strong class="trust-num" id="trust-pharmacies">—</strong> pharmacies</span>
+  </div>
+  <div class="trust-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+    <span><strong class="trust-num" id="trust-medicines">—</strong> medicines listed</span>
+  </div>
+  <div class="trust-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+    <span>Updated in real time</span>
+  </div>
+  <div class="trust-item">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <span>Free for patients</span>
+  </div>
+</div>
+
 <main>
+  <!-- RESULTS -->
   <div id="results-section" style="display:none">
-    <p class="section-label" id="results-label">Results</p>
+    <div class="section-head">
+      <p class="section-label" id="results-label">Results</p>
+      <span class="section-count" id="results-count"></span>
+    </div>
     <div class="results-grid" id="results-grid"></div>
   </div>
+
+  <!-- DEFAULT — PHARMACY LIST -->
   <div id="default-section">
-    <p class="section-label" id="pharmacy-section-label">Registered pharmacies</p>
-    <div class="pharmacy-list" id="pharmacy-list">
-      <div class="pharmacy-row"><div><span class="spinner"></span> Loading pharmacies…</div></div>
+    <div class="section-head">
+      <p class="section-label" id="pharmacy-section-label">Registered pharmacies</p>
+    </div>
+    <div class="pharmacy-grid" id="pharmacy-list">
+      <div class="state-box" style="grid-column:1/-1"><span class="spinner"></span> Loading pharmacies…</div>
     </div>
   </div>
 </main>
 
 <footer>
+  <div class="footer-logo">Pharm<span>Finderz</span></div>
   <p>Stock data updated by pharmacies in real time. Always confirm before visiting.</p>
   <p>
     <a href="about.html">About</a>
@@ -191,21 +222,59 @@
     <a href="privacy.html">Privacy Policy</a>
     <a href="register.html">Register your pharmacy</a>
   </p>
-  <p style="margin-top:6px">© 2026 PharmFinderz Zimbabwe · Free for patients · Always</p>
+  <p style="margin-top:.25rem">© 2026 PharmFinderz Zimbabwe · Free for patients · Always</p>
 </footer>
 
 <script>
 const SUPA_URL='https://ultudsxmjvzjfojoyjfu.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
 let userLat=null,userLng=null;
+
 if(navigator.geolocation)navigator.geolocation.getCurrentPosition(p=>{userLat=p.coords.latitude;userLng=p.coords.longitude;loadPharmacies()},()=>loadPharmacies());
 else loadPharmacies();
-async function supaFetch(path){const res=await fetch(SUPA_URL+'/rest/v1/'+path,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});if(!res.ok)throw new Error((await res.json()).message);return res.json()}
-function getStatus(qty){if(qty===0)return{cls:'badge-out',label:'Out of stock',key:'out'};if(qty<=15)return{cls:'badge-low',label:'Low stock',key:'low'};return{cls:'badge-in',label:'In stock',key:'in'}}
-function getDistKm(la1,lo1,la2,lo2){const R=6371,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180,a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
-function fmtDist(km){return km<1?Math.round(km*1000)+' m':km.toFixed(1)+' km'}
-function timeAgo(ts){const m=Math.round((Date.now()-new Date(ts).getTime())/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.round(m/60);if(h<24)return h+'h ago';return Math.round(h/24)+'d ago'}
-function isOpenNow(opens,closes){if(!opens||!closes)return null;const now=new Date(),nm=now.getHours()*60+now.getMinutes(),om=parseInt(opens)*60+parseInt(opens.split(':')[1]),cm=parseInt(closes)*60+parseInt(closes.split(':')[1]);return nm>=om&&nm<cm}
+
+async function supaFetch(path){
+  const res=await fetch(SUPA_URL+'/rest/v1/'+path,{headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY}});
+  if(!res.ok)throw new Error((await res.json()).message);
+  return res.json();
+}
+
+function getStatus(qty){
+  if(qty===0)return{cls:'badge-out',label:'Out of stock',key:'out'};
+  if(qty<=15)return{cls:'badge-low',label:'Low stock',key:'low'};
+  return{cls:'badge-in',label:'In stock',key:'in'};
+}
+
+function getDistKm(la1,lo1,la2,lo2){
+  const R=6371,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180,
+  a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;
+  return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function fmtDist(km){return km<1?Math.round(km*1000)+' m away':km.toFixed(1)+' km away'}
+
+function timeAgo(ts){
+  const m=Math.round((Date.now()-new Date(ts).getTime())/60000);
+  if(m<1)return'just now';if(m<60)return m+'m ago';
+  const h=Math.round(m/60);if(h<24)return h+'h ago';
+  return Math.round(h/24)+'d ago';
+}
+
+function isOpenNow(opens,closes){
+  if(!opens||!closes)return null;
+  const now=new Date(),nm=now.getHours()*60+now.getMinutes(),
+  om=parseInt(opens)*60+parseInt(opens.split(':')[1]),
+  cm=parseInt(closes)*60+parseInt(closes.split(':')[1]);
+  return nm>=om&&nm<cm;
+}
+
+function openBadge(opens,closes){
+  const op=isOpenNow(opens,closes);
+  if(op===true)return'<span class="badge badge-open">Open now</span>';
+  if(op===false)return'<span class="badge badge-closed">Closed</span>';
+  return'';
+}
+
 async function loadPharmacies(){
   const list=document.getElementById('pharmacy-list');
   const city=document.getElementById('city-filter').value;
@@ -214,32 +283,67 @@ async function loadPharmacies(){
     let path='pharmacies?select=id,name,suburb,city,latitude,longitude,plan,phone,opens_at,closes_at&is_verified=eq.true&order=name';
     if(city)path+='&city=eq.'+encodeURIComponent(city);
     const data=await supaFetch(path);
+
     // Load trust counters
     supaFetch('pharmacies?select=id&is_verified=eq.true').then(r=>{document.getElementById('trust-pharmacies').textContent=r.length}).catch(()=>{});
     supaFetch('medicines?select=id').then(r=>{document.getElementById('trust-medicines').textContent=r.length}).catch(()=>{});
-    if(!data.length){list.innerHTML='<div class="pharmacy-row"><div style="color:var(--ink3)">No pharmacies found'+(city?' in '+city:'')+'.</div></div>';return}
+
+    if(!data.length){
+      list.innerHTML='<div class="state-box" style="grid-column:1/-1">No pharmacies found'+(city?' in '+city:'')+'.<br><a href="register.html" style="color:var(--green)">Register yours →</a></div>';
+      return;
+    }
+
     const counts=await Promise.all(data.map(p=>supaFetch('medicines?select=id&pharmacy_id=eq.'+p.id).then(r=>r.length).catch(()=>0)));
-    let phs=data.map((p,i)=>{let dist=null;if(userLat!==null&&p.latitude&&p.longitude)dist=getDistKm(userLat,userLng,parseFloat(p.latitude),parseFloat(p.longitude));return{...p,dist,count:counts[i]}});
-    phs.sort((a,b)=>{if(a.plan==='premium'&&b.plan!=='premium')return -1;if(b.plan==='premium'&&a.plan!=='premium')return 1;if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;return 0});
-    list.innerHTML=phs.map(p=>{
-      const open=isOpenNow(p.opens_at,p.closes_at);
-      const openBadge=open===true?'<span class="badge badge-open" style="font-size:10px;padding:2px 7px">Open</span>':open===false?'<span class="badge badge-closed" style="font-size:10px;padding:2px 7px">Closed</span>':'';
-      return`<a class="pharmacy-row" href="pharmacy.html?id=${p.id}">
-        <div class="ph-info">
-          <div class="ph-name" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${p.name}${p.plan==='premium'?' ⭐':''}${openBadge}</div>
-          <div class="ph-addr">${p.suburb}, ${p.city}${p.dist!==null?' · '+fmtDist(p.dist):''}${p.phone?' · <a href="tel:'+p.phone+'" onclick="event.stopPropagation()" style="color:var(--green);text-decoration:none">'+p.phone+'</a>':''}</div>
+    let phs=data.map((p,i)=>{
+      let dist=null;
+      if(userLat!==null&&p.latitude&&p.longitude)dist=getDistKm(userLat,userLng,parseFloat(p.latitude),parseFloat(p.longitude));
+      return{...p,dist,count:counts[i]};
+    });
+    phs.sort((a,b)=>{
+      if(a.plan==='premium'&&b.plan!=='premium')return -1;
+      if(b.plan==='premium'&&a.plan!=='premium')return 1;
+      if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;
+      return 0;
+    });
+
+    list.innerHTML=phs.map((p,i)=>`
+      <a class="ph-card" href="pharmacy.html?id=${p.id}" style="animation-delay:${i*.05}s">
+        <div class="ph-card-header">
+          <div class="ph-avatar">${(p.name||'?').charAt(0).toUpperCase()}</div>
+          <div class="ph-card-info">
+            <div class="ph-card-name">${p.name}${p.plan==='premium'?' ⭐':''}</div>
+            <div class="ph-card-addr">
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              ${p.suburb}, ${p.city}${p.dist!==null?' · '+fmtDist(p.dist):''}
+            </div>
+            <div class="ph-card-badges">
+              ${openBadge(p.opens_at,p.closes_at)}
+              ${p.opens_at?'<span style="font-size:11px;color:var(--ink3)">'+p.opens_at.slice(0,5)+' – '+p.closes_at.slice(0,5)+'</span>':''}
+            </div>
+          </div>
         </div>
-        <span class="ph-count">${p.count} med${p.count===1?'':'s'}</span>
-      </a>`}).join('');
-  }catch(e){list.innerHTML='<div class="pharmacy-row"><div style="color:var(--red-tx)">Could not load: '+e.message+'</div></div>'}
+        <div class="ph-card-footer">
+          <span class="ph-count-badge">${p.count} medicine${p.count===1?'':'s'}</span>
+          ${p.phone?`<a class="ph-phone" href="tel:${p.phone}" onclick="event.stopPropagation()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            Call
+          </a>`:''}
+          <span class="ph-arrow">→</span>
+        </div>
+      </a>`).join('');
+  }catch(e){
+    list.innerHTML='<div class="state-box" style="grid-column:1/-1;color:var(--red-tx)">Could not load pharmacies: '+e.message+'</div>';
+  }
 }
+
 function onCityChange(){const q=document.getElementById('search-input').value.trim();if(q)doSearch();else loadPharmacies()}
+
 async function doSearch(){
   const q=document.getElementById('search-input').value.trim();
   const city=document.getElementById('city-filter').value;
   if(!q&&!city)return;
   const btn=document.getElementById('search-btn');
-  btn.disabled=true;btn.innerHTML='<span class="spinner"></span>';
+  btn.disabled=true;btn.innerHTML='<span class="spinner" style="border-color:rgba(255,255,255,.3);border-top-color:#fff"></span> Searching…';
   const parts=[];if(q)parts.push('"'+q+'"');if(city)parts.push('in '+city);
   document.getElementById('results-label').textContent='Results for '+parts.join(' ');
   document.getElementById('results-section').style.display='block';
@@ -252,61 +356,90 @@ async function doSearch(){
     path+='&order=quantity.desc';
     let meds=await supaFetch(path);
     if(city&&meds)meds=meds.filter(m=>m.pharmacies&&m.pharmacies.city===city);
-    btn.disabled=false;btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search';
+
+    btn.disabled=false;
+    btn.innerHTML='<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search medicines';
+
     if(!meds||!meds.length){
       grid.innerHTML=`<div class="state-box">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:block;margin:0 auto .75rem;opacity:.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
         No results found${q?' for <strong>'+q+'</strong>':''}${city?' in <strong>'+city+'</strong>':''}.
-        <br><span style="font-size:13px;color:var(--ink3)">None of our registered pharmacies stock this medicine right now.</span>
-        <br><br>
-        <div style="background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rs);padding:1rem 1.25rem;max-width:340px;margin:0 auto;text-align:left">
-          <div style="font-size:13px;font-weight:500;color:var(--green-tx);margin-bottom:.5rem">📬 Request this medicine</div>
-          <div style="font-size:12px;color:var(--green-dk);margin-bottom:.75rem">Leave your number and we'll notify you when a pharmacy lists it.</div>
-          <div style="display:flex;gap:6px;flex-wrap:wrap">
-            <input type="tel" id="request-phone" placeholder="+263 77 000 0000" style="flex:1;min-width:140px;height:36px;padding:0 10px;border-radius:var(--rs);border:1px solid var(--green-md);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff"/>
-            <button onclick="submitRequest('${q}','${city}')" style="height:36px;padding:0 14px;border-radius:var(--rs);background:var(--green);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap">Notify me</button>
+        <br><span style="font-size:13px">None of our pharmacies stock this medicine right now.</span>
+        <div style="margin-top:1.25rem;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rs);padding:1rem 1.25rem;text-align:left;max-width:380px;margin-left:auto;margin-right:auto">
+          <p style="font-size:13px;font-weight:500;color:var(--green-tx);margin-bottom:.375rem">📬 Get notified when it's available</p>
+          <p style="font-size:12px;color:var(--green-dk);margin-bottom:.75rem">Leave your number and we'll contact you when a pharmacy stocks it.</p>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <input type="tel" id="request-phone" placeholder="+263 77 000 0000" style="flex:1;min-width:140px;height:40px;padding:0 12px;border-radius:var(--rs);border:1.5px solid var(--green-md);background:#fff;font-family:'DM Sans',sans-serif;font-size:14px;color:var(--ink)"/>
+            <button onclick="submitRequest('${q}','${city}')" style="height:40px;padding:0 16px;border-radius:var(--rs);background:var(--green);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap">Notify me</button>
           </div>
-          <div id="request-msg" style="font-size:12px;margin-top:6px;display:none"></div>
+          <div id="request-msg" style="font-size:12px;margin-top:8px;display:none"></div>
         </div>
       </div>`;
+      document.getElementById('results-count').textContent='';
       return;
     }
-    let results=meds.map(m=>{const ph=m.pharmacies||{};let dist=null;if(userLat!==null&&ph.latitude&&ph.longitude)dist=getDistKm(userLat,userLng,parseFloat(ph.latitude),parseFloat(ph.longitude));return{...m,ph,dist}});
-    results.sort((a,b)=>{const ap=a.ph.plan==='premium'?0:1,bp=b.ph.plan==='premium'?0:1;if(ap!==bp)return ap-bp;const so={'in':0,'low':1,'out':2};const as=getStatus(a.quantity||0).key,bs=getStatus(b.quantity||0).key;if(so[as]!==so[bs])return so[as]-so[bs];if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;return 0});
-    grid.innerHTML=results.map((m,i)=>{const st=getStatus(m.quantity||0);const ph=m.ph;const href=ph.id?'pharmacy.html?id='+ph.id:'#';
-      const open=isOpenNow(ph.opens_at,ph.closes_at);
-      const openBadge=open===true?'<span class="badge badge-open" style="font-size:10px;padding:2px 7px">Open</span>':open===false?'<span class="badge badge-closed" style="font-size:10px;padding:2px 7px">Closed</span>':'';
-      return`<a class="med-card" href="${href}" style="text-decoration:none;display:block;animation-delay:${i*.03}s${ph.plan==='premium'?';border-left:3px solid var(--green)':''}">
-      <div class="med-card-top"><div class="med-name">${m.name}</div><span class="badge ${st.cls}">${st.label}</span></div>
-      <div class="med-pharmacy" style="justify-content:space-between">${ph.name||'—'}${ph.plan==='premium'?' ⭐':''}${openBadge}</div>
-      <div class="med-meta">${ph.suburb?ph.suburb+', '+ph.city:'—'}${m.dist!==null?' · '+fmtDist(m.dist):''}${m.price_usd?' · $'+parseFloat(m.price_usd).toFixed(2):''}</div>
-      ${ph.phone?'<div class="med-meta" style="margin-top:4px"><a href="tel:'+ph.phone+'" onclick="event.stopPropagation()" style="color:var(--green);font-weight:500;text-decoration:none">📞 '+ph.phone+'</a></div>':''}
-    </a>`}).join('');
-  }catch(e){btn.disabled=false;btn.innerHTML='Search';grid.innerHTML='<div class="state-box" style="color:var(--red-tx)">Search failed: '+e.message+'</div>'}
+
+    let results=meds.map(m=>{
+      const ph=m.pharmacies||{};
+      let dist=null;
+      if(userLat!==null&&ph.latitude&&ph.longitude)dist=getDistKm(userLat,userLng,parseFloat(ph.latitude),parseFloat(ph.longitude));
+      return{...m,ph,dist};
+    });
+
+    results.sort((a,b)=>{
+      const ap=a.ph.plan==='premium'?0:1,bp=b.ph.plan==='premium'?0:1;
+      if(ap!==bp)return ap-bp;
+      const so={'in':0,'low':1,'out':2};
+      const as=getStatus(a.quantity||0).key,bs=getStatus(b.quantity||0).key;
+      if(so[as]!==so[bs])return so[as]-so[bs];
+      if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;
+      return 0;
+    });
+
+    document.getElementById('results-count').textContent=results.length+' result'+(results.length===1?'':'s');
+
+    grid.innerHTML=results.map((m,i)=>{
+      const st=getStatus(m.quantity||0);
+      const ph=m.ph;
+      const href=ph.id?'pharmacy.html?id='+ph.id:'#';
+      const ob=openBadge(ph.opens_at,ph.closes_at);
+      return`<a class="med-card" href="${href}" style="animation-delay:${i*.04}s${ph.plan==='premium'?';border-color:var(--green-md)':''}">
+        <div class="med-card-top">
+          <div class="med-name">${m.name}</div>
+          <span class="badge ${st.cls}">${st.label}</span>
+        </div>
+        <div class="med-divider"></div>
+        <div class="med-ph-name">${ph.name||'—'}${ph.plan==='premium'?' ⭐':''}</div>
+        <div class="med-detail">
+          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 1 1 16 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          ${ph.suburb?ph.suburb+', '+ph.city:'—'}
+          ${m.dist!==null?' · '+fmtDist(m.dist):''}
+          ${m.price_usd?' · $'+parseFloat(m.price_usd).toFixed(2):''}
+        </div>
+        <div class="med-detail" style="margin-top:3px">${ob} Updated ${timeAgo(m.updated_at)}</div>
+        ${ph.phone?'<a class="med-call" href="tel:'+ph.phone+'" onclick="event.stopPropagation()"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> Call pharmacy</a>':''}
+      </a>`;
+    }).join('');
+  }catch(e){
+    btn.disabled=false;
+    btn.innerHTML='Search medicines';
+    grid.innerHTML='<div class="state-box" style="color:var(--red-tx)">Search failed: '+e.message+'</div>';
+  }
 }
+
 function quickSearch(name){document.getElementById('search-input').value=name;doSearch()}
+
 function submitRequest(medicine,city){
   const phone=document.getElementById('request-phone').value.trim();
   const msg=document.getElementById('request-msg');
   if(!phone){msg.style.display='block';msg.style.color='var(--red-tx)';msg.textContent='Please enter your phone number.';return}
-  // Save request to Supabase medicine_requests table if it exists, otherwise just show confirmation
   supaFetch('medicine_requests?select=id').then(()=>{
     return fetch(SUPA_URL+'/rest/v1/medicine_requests',{method:'POST',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},body:JSON.stringify({medicine_name:medicine,city:city||null,phone})});
   }).catch(()=>{}).finally(()=>{
     msg.style.display='block';msg.style.color='var(--green-tx)';
-    msg.textContent='✓ Noted! We\'ll let you know when '+medicine+' becomes available.';
+    msg.textContent="✓ We'll notify you when "+medicine+" becomes available.";
     document.getElementById('request-phone').disabled=true;
   });
-}
-function submitRequest(medicine,city){
-  const phone=document.getElementById('request-phone').value.trim();
-  const msg=document.getElementById('request-msg');
-  if(!phone){msg.style.display='block';msg.style.color='var(--red-tx)';msg.textContent='Please enter your phone number.';return}
-  // Store request via mailto as simple fallback — can be upgraded to database later
-  const subject=encodeURIComponent('Medicine request: '+medicine+(city?' in '+city:''));
-  const body=encodeURIComponent('Medicine requested: '+medicine+'\nCity: '+(city||'Any')+'\nPhone: '+phone+'\nPlease notify when available.');
-  window.location.href='mailto:admin@pharmfinderz.co.zw?subject='+subject+'&body='+body;
-  msg.style.display='block';msg.style.color='var(--green-tx)';msg.textContent='✓ Request sent! We\'ll notify you when this medicine is available.';
 }
 </script>
 </body>
