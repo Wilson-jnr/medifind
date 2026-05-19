@@ -180,6 +180,7 @@
       <option>Vitamins &amp; supplements</option><option>Other</option>
     </select>
     <button class="btn-add" onclick="openModal(null)">+ Add medicine</button>
+    <button style="height:38px;padding:0 14px;border-radius:var(--rs);background:transparent;border:1px solid var(--bd2);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink2);cursor:pointer;white-space:nowrap" onclick="openBulkModal()">⬆ Bulk import</button>
   </div>
 
   <div class="table-wrap">
@@ -217,6 +218,29 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<!-- BULK IMPORT MODAL -->
+<div class="modal-bg" id="bulk-modal-bg">
+  <div class="modal" style="max-width:480px">
+    <p class="modal-title">Bulk import medicines</p>
+    <p style="font-size:13px;color:var(--ink2);margin-bottom:1rem;line-height:1.6">Paste your medicine list below — one medicine per line. Format: <strong>Name, Category, Quantity, Price</strong></p>
+    <div style="background:var(--bg);border:1px solid var(--bd);border-radius:var(--rs);padding:.75rem;font-size:12px;color:var(--ink3);margin-bottom:.875rem;font-family:monospace;line-height:1.8">
+      Paracetamol 500mg, Analgesics, 100, 0.80<br/>
+      Amoxicillin 250mg, Antibiotics, 50, 2.50<br/>
+      Metformin 500mg, Antidiabetics, 0, 1.20
+    </div>
+    <div class="field">
+      <label>Your medicine list</label>
+      <textarea id="bulk-input" rows="8" placeholder="Paste your medicines here…" style="font-family:monospace;font-size:13px"></textarea>
+    </div>
+    <div id="bulk-preview" style="font-size:12px;color:var(--ink2);margin-bottom:.5rem;display:none"></div>
+    <div class="error-banner" id="bulk-error"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeBulkModal()">Cancel</button>
+      <button class="btn-save" id="bulk-save-btn" onclick="saveBulk()">Import medicines</button>
+    </div>
+  </div>
+</div>
 
 <script>
 const SUPA_URL='https://ultudsxmjvzjfojoyjfu.supabase.co';
@@ -352,6 +376,57 @@ function showToast(msg,isErr=false){
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.display='none'},3000);
 }
 document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeModal()});
+document.getElementById('bulk-modal-bg').addEventListener('click',function(e){if(e.target===this)closeBulkModal()});
+
+function openBulkModal(){
+  document.getElementById('bulk-input').value='';
+  document.getElementById('bulk-preview').style.display='none';
+  document.getElementById('bulk-error').style.display='none';
+  document.getElementById('bulk-modal-bg').classList.add('open');
+  setTimeout(()=>document.getElementById('bulk-input').focus(),50);
+}
+function closeBulkModal(){document.getElementById('bulk-modal-bg').classList.remove('open')}
+
+function parseBulk(text){
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l.length>0);
+  const CATS=['Analgesics','Antibiotics','Antidiabetics','Antihypertensives','Antihistamines','Antimalarials','Vitamins & supplements','Other'];
+  return lines.map(line=>{
+    const parts=line.split(',').map(p=>p.trim());
+    const name=parts[0]||'';
+    let cat=parts[1]||'Other';
+    // fuzzy match category
+    const match=CATS.find(c=>c.toLowerCase().includes(cat.toLowerCase())||cat.toLowerCase().includes(c.toLowerCase().split(' ')[0]));
+    if(match)cat=match;else if(!CATS.includes(cat))cat='Other';
+    const qty=parseInt(parts[2])||0;
+    const price=parseFloat(parts[3])||null;
+    return{name,category:cat,quantity:qty,price_usd:price};
+  }).filter(m=>m.name.length>0);
+}
+
+document.getElementById('bulk-input').addEventListener('input',function(){
+  const parsed=parseBulk(this.value);
+  const preview=document.getElementById('bulk-preview');
+  if(parsed.length>0){preview.style.display='block';preview.textContent='✓ '+parsed.length+' medicine'+( parsed.length===1?'':'s')+' detected — ready to import'}
+  else{preview.style.display='none'}
+});
+
+async function saveBulk(){
+  const text=document.getElementById('bulk-input').value;
+  const err=document.getElementById('bulk-error');
+  const btn=document.getElementById('bulk-save-btn');
+  const parsed=parseBulk(text);
+  if(!parsed.length){err.textContent='No valid medicines found. Check the format and try again.';err.style.display='block';return}
+  if(!pharmacyId){err.textContent='No pharmacy linked to your account.';err.style.display='block';return}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Importing…';err.style.display='none';
+  const payload=parsed.map(m=>({...m,pharmacy_id:pharmacyId,updated_at:new Date().toISOString()}));
+  try{
+    const result=await supaFetch('/rest/v1/medicines',{method:'POST',headers:{'Prefer':'return=representation'},body:JSON.stringify(payload)});
+    if(result)medicines.push(...result);
+    closeBulkModal();renderTable();
+    showToast(parsed.length+' medicines imported successfully ✓');
+  }catch(e){err.textContent='Import failed: '+e.message;err.style.display='block'}
+  btn.disabled=false;btn.textContent='Import medicines';
+}
 </script>
 </body>
 </html>

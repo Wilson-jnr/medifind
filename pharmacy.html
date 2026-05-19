@@ -123,7 +123,11 @@ async function loadPharmacy(){
     const[pharmacy,medicines]=await Promise.all([supaFetch('pharmacies?select=*&id=eq.'+pharmacyId+'&limit=1'),supaFetch('medicines?select=*&pharmacy_id=eq.'+pharmacyId+'&order=name')]);
     if(!pharmacy||!pharmacy.length){page.innerHTML='<div class="state-box">Pharmacy not found. <a href="index.html" style="color:var(--green)">Go back</a></div>';return}
     const p=pharmacy[0];allMedicines=medicines||[];
-    document.title=p.name+' — PharmFinderz';
+    document.title=p.name+' — Medicines in Stock | PharmFinderz Zimbabwe';
+    // Set meta description dynamically for SEO
+    let meta=document.querySelector('meta[name="description"]');
+    if(!meta){meta=document.createElement('meta');meta.name='description';document.head.appendChild(meta)}
+    meta.content=p.name+' in '+p.city+', Zimbabwe. Check medicine availability in real time. '+allMedicines.length+' medicines listed. Find pharmacies near you on PharmFinderz.';
     let distTag='';
     if(userLat&&p.latitude&&p.longitude){const d=getDistKm(userLat,userLng,parseFloat(p.latitude),parseFloat(p.longitude));distTag='<span class="profile-tag green">'+fmtDist(d)+'</span>'}
     const inStock=allMedicines.filter(m=>getStatus(m.quantity||0).key==='in').length;

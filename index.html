@@ -93,7 +93,14 @@
     .ph-addr{font-size:12px;color:var(--ink2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
     .ph-count{font-size:12px;padding:3px 10px;border-radius:99px;background:var(--green-lt);color:var(--green-tx);white-space:nowrap;font-weight:500;flex-shrink:0}
 
-    /* STATES */
+    /* TRUST BAR */
+    .trust-bar{display:flex;align-items:center;justify-content:center;gap:1.5rem;flex-wrap:wrap;margin-top:1.25rem;padding-top:1.25rem;border-top:1px solid var(--bd)}
+    .trust-item{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2)}
+    .trust-num{font-size:16px;font-weight:500;color:var(--ink)}
+
+    /* OPEN/CLOSED badge */
+    .badge-open{background:var(--green-lt);color:var(--green-tx)}
+    .badge-closed{background:var(--amber-bg);color:var(--amber-tx)}
     .state-box{text-align:center;padding:2.5rem 1rem;color:var(--ink3);font-size:14px;grid-column:1/-1}
     .spinner{display:inline-block;width:18px;height:18px;border:2px solid var(--bd2);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;vertical-align:-4px;margin-right:6px}
     @keyframes spin{to{transform:rotate(360deg)}}
@@ -147,6 +154,20 @@
     <button class="pill" onclick="quickSearch('Ibuprofen')">Ibuprofen</button>
     <button class="pill" onclick="quickSearch('Cotrimoxazole')">Cotrimoxazole</button>
   </div>
+  <div class="trust-bar">
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <span><span class="trust-num" id="trust-pharmacies">—</span> pharmacies</span>
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><path d="M9 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2h-4"/><path d="M12 11v6"/><path d="M9 14h6"/></svg>
+      <span><span class="trust-num" id="trust-medicines">—</span> medicines listed</span>
+    </div>
+    <div class="trust-item">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="color:var(--green)"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+      <span>Updated in real time</span>
+    </div>
+  </div>
 </section>
 
 <main>
@@ -184,27 +205,32 @@ function getStatus(qty){if(qty===0)return{cls:'badge-out',label:'Out of stock',k
 function getDistKm(la1,lo1,la2,lo2){const R=6371,dL=(la2-la1)*Math.PI/180,dO=(lo2-lo1)*Math.PI/180,a=Math.sin(dL/2)**2+Math.cos(la1*Math.PI/180)*Math.cos(la2*Math.PI/180)*Math.sin(dO/2)**2;return R*2*Math.atan2(Math.sqrt(a),Math.sqrt(1-a))}
 function fmtDist(km){return km<1?Math.round(km*1000)+' m':km.toFixed(1)+' km'}
 function timeAgo(ts){const m=Math.round((Date.now()-new Date(ts).getTime())/60000);if(m<1)return'just now';if(m<60)return m+'m ago';const h=Math.round(m/60);if(h<24)return h+'h ago';return Math.round(h/24)+'d ago'}
+function isOpenNow(opens,closes){if(!opens||!closes)return null;const now=new Date(),nm=now.getHours()*60+now.getMinutes(),om=parseInt(opens)*60+parseInt(opens.split(':')[1]),cm=parseInt(closes)*60+parseInt(closes.split(':')[1]);return nm>=om&&nm<cm}
 async function loadPharmacies(){
   const list=document.getElementById('pharmacy-list');
   const city=document.getElementById('city-filter').value;
   document.getElementById('pharmacy-section-label').textContent=city?'Pharmacies in '+city:'Registered pharmacies';
   try{
-    let path='pharmacies?select=id,name,suburb,city,latitude,longitude,plan&is_verified=eq.true&order=name';
+    let path='pharmacies?select=id,name,suburb,city,latitude,longitude,plan,phone,opens_at,closes_at&is_verified=eq.true&order=name';
     if(city)path+='&city=eq.'+encodeURIComponent(city);
     const data=await supaFetch(path);
+    // Load trust counters
+    supaFetch('pharmacies?select=id&is_verified=eq.true').then(r=>{document.getElementById('trust-pharmacies').textContent=r.length}).catch(()=>{});
+    supaFetch('medicines?select=id').then(r=>{document.getElementById('trust-medicines').textContent=r.length}).catch(()=>{});
     if(!data.length){list.innerHTML='<div class="pharmacy-row"><div style="color:var(--ink3)">No pharmacies found'+(city?' in '+city:'')+'.</div></div>';return}
     const counts=await Promise.all(data.map(p=>supaFetch('medicines?select=id&pharmacy_id=eq.'+p.id).then(r=>r.length).catch(()=>0)));
     let phs=data.map((p,i)=>{let dist=null;if(userLat!==null&&p.latitude&&p.longitude)dist=getDistKm(userLat,userLng,parseFloat(p.latitude),parseFloat(p.longitude));return{...p,dist,count:counts[i]}});
     phs.sort((a,b)=>{if(a.plan==='premium'&&b.plan!=='premium')return -1;if(b.plan==='premium'&&a.plan!=='premium')return 1;if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;return 0});
-    list.innerHTML=phs.map(p=>`
-      <a class="pharmacy-row" href="pharmacy.html?id=${p.id}">
+    list.innerHTML=phs.map(p=>{
+      const open=isOpenNow(p.opens_at,p.closes_at);
+      const openBadge=open===true?'<span class="badge badge-open" style="font-size:10px;padding:2px 7px">Open</span>':open===false?'<span class="badge badge-closed" style="font-size:10px;padding:2px 7px">Closed</span>':'';
+      return`<a class="pharmacy-row" href="pharmacy.html?id=${p.id}">
         <div class="ph-info">
-          <div class="ph-name">${p.name}${p.plan==='premium'?' ⭐':''}</div>
-          <div class="ph-addr">${p.suburb}, ${p.city}${p.dist!==null?' · '+fmtDist(p.dist):''}
-          </div>
+          <div class="ph-name" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">${p.name}${p.plan==='premium'?' ⭐':''}${openBadge}</div>
+          <div class="ph-addr">${p.suburb}, ${p.city}${p.dist!==null?' · '+fmtDist(p.dist):''}${p.phone?' · <a href="tel:'+p.phone+'" onclick="event.stopPropagation()" style="color:var(--green);text-decoration:none">'+p.phone+'</a>':''}</div>
         </div>
         <span class="ph-count">${p.count} med${p.count===1?'':'s'}</span>
-      </a>`).join('');
+      </a>`}).join('');
   }catch(e){list.innerHTML='<div class="pharmacy-row"><div style="color:var(--red-tx)">Could not load: '+e.message+'</div></div>'}
 }
 function onCityChange(){const q=document.getElementById('search-input').value.trim();if(q)doSearch();else loadPharmacies()}
@@ -221,23 +247,54 @@ async function doSearch(){
   const grid=document.getElementById('results-grid');
   grid.innerHTML='<div class="state-box"><span class="spinner"></span> Searching…</div>';
   try{
-    let path='medicines?select=name,quantity,price_usd,updated_at,pharmacy_id,pharmacies(id,name,suburb,city,latitude,longitude,plan)';
+    let path='medicines?select=name,quantity,price_usd,updated_at,pharmacy_id,pharmacies(id,name,suburb,city,latitude,longitude,plan,phone,opens_at,closes_at)';
     if(q)path+='&name=ilike.*'+encodeURIComponent(q)+'*';
     path+='&order=quantity.desc';
     let meds=await supaFetch(path);
     if(city&&meds)meds=meds.filter(m=>m.pharmacies&&m.pharmacies.city===city);
     btn.disabled=false;btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> Search';
-    if(!meds||!meds.length){grid.innerHTML='<div class="state-box">No results found'+(q?' for <strong>'+q+'</strong>':'')+(city?' in <strong>'+city+'</strong>':'')+'.<br>Try a different name.</div>';return}
+    if(!meds||!meds.length){
+      grid.innerHTML=`<div class="state-box">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="display:block;margin:0 auto .75rem;opacity:.3"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        No results found${q?' for <strong>'+q+'</strong>':''}${city?' in <strong>'+city+'</strong>':''}.
+        <br><span style="font-size:13px;color:var(--ink3)">None of our registered pharmacies stock this medicine right now.</span>
+        <br><br>
+        <div style="background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rs);padding:1rem 1.25rem;max-width:340px;margin:0 auto;text-align:left">
+          <div style="font-size:13px;font-weight:500;color:var(--green-tx);margin-bottom:.5rem">📬 Request this medicine</div>
+          <div style="font-size:12px;color:var(--green-dk);margin-bottom:.75rem">Leave your number and we'll notify you when a pharmacy lists it.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap">
+            <input type="tel" id="request-phone" placeholder="+263 77 000 0000" style="flex:1;min-width:140px;height:36px;padding:0 10px;border-radius:var(--rs);border:1px solid var(--green-md);font-family:'DM Sans',sans-serif;font-size:14px;background:#fff"/>
+            <button onclick="submitRequest('${q}','${city}')" style="height:36px;padding:0 14px;border-radius:var(--rs);background:var(--green);color:#fff;border:none;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap">Notify me</button>
+          </div>
+          <div id="request-msg" style="font-size:12px;margin-top:6px;display:none"></div>
+        </div>
+      </div>`;
+      return;
+    }
     let results=meds.map(m=>{const ph=m.pharmacies||{};let dist=null;if(userLat!==null&&ph.latitude&&ph.longitude)dist=getDistKm(userLat,userLng,parseFloat(ph.latitude),parseFloat(ph.longitude));return{...m,ph,dist}});
     results.sort((a,b)=>{const ap=a.ph.plan==='premium'?0:1,bp=b.ph.plan==='premium'?0:1;if(ap!==bp)return ap-bp;const so={'in':0,'low':1,'out':2};const as=getStatus(a.quantity||0).key,bs=getStatus(b.quantity||0).key;if(so[as]!==so[bs])return so[as]-so[bs];if(a.dist!==null&&b.dist!==null)return a.dist-b.dist;return 0});
-    grid.innerHTML=results.map((m,i)=>{const st=getStatus(m.quantity||0);const ph=m.ph;const href=ph.id?'pharmacy.html?id='+ph.id:'#';return`<a class="med-card" href="${href}" style="text-decoration:none;display:block;animation-delay:${i*.03}s${ph.plan==='premium'?';border-left:3px solid var(--green)':''}">
+    grid.innerHTML=results.map((m,i)=>{const st=getStatus(m.quantity||0);const ph=m.ph;const href=ph.id?'pharmacy.html?id='+ph.id:'#';
+      const open=isOpenNow(ph.opens_at,ph.closes_at);
+      const openBadge=open===true?'<span class="badge badge-open" style="font-size:10px;padding:2px 7px">Open</span>':open===false?'<span class="badge badge-closed" style="font-size:10px;padding:2px 7px">Closed</span>':'';
+      return`<a class="med-card" href="${href}" style="text-decoration:none;display:block;animation-delay:${i*.03}s${ph.plan==='premium'?';border-left:3px solid var(--green)':''}">
       <div class="med-card-top"><div class="med-name">${m.name}</div><span class="badge ${st.cls}">${st.label}</span></div>
-      <div class="med-pharmacy">${ph.name||'—'}${ph.plan==='premium'?' ⭐':''}</div>
-      <div class="med-meta">${ph.suburb?ph.suburb+', '+ph.city:'—'}${m.dist!==null?' · '+fmtDist(m.dist):''}${m.price_usd?' · $'+parseFloat(m.price_usd).toFixed(2):''} · ${timeAgo(m.updated_at)}</div>
+      <div class="med-pharmacy" style="justify-content:space-between">${ph.name||'—'}${ph.plan==='premium'?' ⭐':''}${openBadge}</div>
+      <div class="med-meta">${ph.suburb?ph.suburb+', '+ph.city:'—'}${m.dist!==null?' · '+fmtDist(m.dist):''}${m.price_usd?' · $'+parseFloat(m.price_usd).toFixed(2):''}</div>
+      ${ph.phone?'<div class="med-meta" style="margin-top:4px"><a href="tel:'+ph.phone+'" onclick="event.stopPropagation()" style="color:var(--green);font-weight:500;text-decoration:none">📞 '+ph.phone+'</a></div>':''}
     </a>`}).join('');
   }catch(e){btn.disabled=false;btn.innerHTML='Search';grid.innerHTML='<div class="state-box" style="color:var(--red-tx)">Search failed: '+e.message+'</div>'}
 }
 function quickSearch(name){document.getElementById('search-input').value=name;doSearch()}
+function submitRequest(medicine,city){
+  const phone=document.getElementById('request-phone').value.trim();
+  const msg=document.getElementById('request-msg');
+  if(!phone){msg.style.display='block';msg.style.color='var(--red-tx)';msg.textContent='Please enter your phone number.';return}
+  // Store request via mailto as simple fallback — can be upgraded to database later
+  const subject=encodeURIComponent('Medicine request: '+medicine+(city?' in '+city:''));
+  const body=encodeURIComponent('Medicine requested: '+medicine+'\nCity: '+(city||'Any')+'\nPhone: '+phone+'\nPlease notify when available.');
+  window.location.href='mailto:admin@pharmfinderz.co.zw?subject='+subject+'&body='+body;
+  msg.style.display='block';msg.style.color='var(--green-tx)';msg.textContent='✓ Request sent! We\'ll notify you when this medicine is available.';
+}
 </script>
 </body>
 </html>
