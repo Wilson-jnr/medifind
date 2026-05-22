@@ -141,6 +141,20 @@
     <button class="btn-green" id="login-btn" onclick="doLogin()">Log in</button>
     <div class="error-banner" id="login-error"></div>
     <p class="login-footer">No account yet? <a href="register.html">Register your pharmacy →</a></p>
+    <p class="login-footer" style="margin-top:.5rem"><a href="#" onclick="showForgot();return false" style="color:var(--ink3);font-size:13px">Forgot your password?</a></p>
+  </div>
+
+  <!-- FORGOT PASSWORD CARD -->
+  <div class="login-card" id="forgot-card" style="display:none;margin-top:1rem">
+    <p class="login-title" style="font-size:18px">Reset your password</p>
+    <p class="login-sub">Enter your email and we'll send you a reset link.</p>
+    <div class="field"><label>Email address</label><input type="email" id="f-reset-email" placeholder="your@email.com" onkeydown="if(event.key==='Enter')sendReset()"/></div>
+    <button class="btn-green" id="reset-btn" onclick="sendReset()">Send reset link</button>
+    <div class="error-banner" id="reset-error"></div>
+    <div id="reset-success" style="display:none;background:var(--green-lt);border:1px solid var(--green-md);border-radius:var(--rs);padding:10px 14px;font-size:13px;color:var(--green-tx);margin-top:1rem">
+      ✓ Reset link sent! Check your email and follow the link to set a new password.
+    </div>
+    <p class="login-footer" style="margin-top:.75rem"><a href="#" onclick="hideForgot();return false" style="color:var(--ink3);font-size:13px">← Back to login</a></p>
   </div>
 </div>
 
@@ -391,7 +405,39 @@ function showToast(msg,isErr=false){
   const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(isErr?' err':'');t.style.display='block';
   clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.style.display='none'},3000);
 }
-document.getElementById('modal-bg').addEventListener('click',function(e){if(e.target===this)closeModal()});
+function showForgot(){
+  document.getElementById('forgot-card').style.display='block';
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('f-reset-email').value=document.getElementById('l-email').value;
+  document.getElementById('f-reset-email').focus();
+}
+function hideForgot(){document.getElementById('forgot-card').style.display='none'}
+
+async function sendReset(){
+  const email=document.getElementById('f-reset-email').value.trim();
+  const err=document.getElementById('reset-error');
+  const suc=document.getElementById('reset-success');
+  const btn=document.getElementById('reset-btn');
+  if(!email||!email.includes('@')){err.textContent='Please enter a valid email address.';err.style.display='block';return}
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Sending…';
+  err.style.display='none';suc.style.display='none';
+  try{
+    const res=await fetch(SUPA_URL+'/auth/v1/recover',{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({
+        email,
+        redirect_to:'https://illustrious-meringue-97ffdb.netlify.app/reset-password.html'
+      })
+    });
+    suc.style.display='block';
+    btn.disabled=false;btn.textContent='Send reset link';
+  }catch(e){
+    err.textContent='Failed to send reset email. Please try again.';
+    err.style.display='block';
+    btn.disabled=false;btn.textContent='Send reset link';
+  }
+}
 document.getElementById('import-bg').addEventListener('click',function(e){if(e.target===this)closeImportModal()});
 function openBulkModal(){document.getElementById('import-text').value='';document.getElementById('import-error').style.display='none';document.getElementById('import-progress').style.display='none';document.getElementById('btn-import-save').disabled=false;document.getElementById('btn-import-save').textContent='Import';document.getElementById('import-bg').classList.add('open')}
 function closeImportModal(){document.getElementById('import-bg').classList.remove('open')}

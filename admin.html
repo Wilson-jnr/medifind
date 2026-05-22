@@ -141,6 +141,13 @@
 <script>
 const SUPA_URL='https://ultudsxmjvzjfojoyjfu.supabase.co';
 const SUPA_KEY='eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVsdHVkc3htanZ6amZvam95amZ1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NzUxNjUsImV4cCI6MjA5NDE1MTE2NX0._3Qk2WO1fZ6P41Z3ZBtoJdHBs3r-jSURs0f-IZZ3xMw';
+
+// ── ADMIN EMAILS — only these emails can access the admin panel ──
+const ADMIN_EMAILS = [
+  'YOUR_ADMIN_EMAIL_HERE'  // replace with your real email
+];
+// ─────────────────────────────────────────────────────────────────
+
 let session=null;
 async function supaFetch(path,opts={}){
   const headers={'apikey':SUPA_KEY,'Authorization':'Bearer '+(session?session.access_token:SUPA_KEY),'Content-Type':'application/json',...opts.headers};
@@ -152,6 +159,14 @@ async function doLogin(){
   const email=document.getElementById('l-email').value.trim(),pw=document.getElementById('l-pw').value;
   const btn=document.getElementById('login-btn'),err=document.getElementById('login-error');
   if(!email||!pw){err.textContent='Please enter your email and password.';err.style.display='block';return}
+
+  // Check admin whitelist before even trying to log in
+  if(!ADMIN_EMAILS.includes(email.toLowerCase())){
+    err.textContent='Access denied. This page is for PharmFinderz administrators only.';
+    err.style.display='block';
+    return;
+  }
+
   btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Logging in…';err.style.display='none';
   try{
     const data=await supaFetch('/auth/v1/token?grant_type=password',{method:'POST',body:JSON.stringify({email,password:pw})});
@@ -160,7 +175,7 @@ async function doLogin(){
     document.getElementById('btn-logout').style.display='inline-block';
     document.getElementById('login-screen').style.display='none';document.getElementById('admin-panel').style.display='block';
     await loadAll();
-  }catch(e){err.textContent='Login failed. Please check your credentials.';err.style.display='block';btn.disabled=false;btn.textContent='Log in to admin panel'}
+  }catch(e){err.textContent='Login failed. Please check your email and password.';err.style.display='block';btn.disabled=false;btn.textContent='Log in to admin panel'}
 }
 function logout(){
   session=null;document.getElementById('login-screen').style.display='block';document.getElementById('admin-panel').style.display='none';

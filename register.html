@@ -189,11 +189,11 @@
   <div class="success" id="success-screen">
     <div class="success-icon">✅</div>
     <h2>You're registered!</h2>
-    <p>Your pharmacy has been submitted. We'll verify your details and activate your account within 24 hours.</p>
+    <p>Your pharmacy has been submitted for review. Your login account has been created — you can log in to the dashboard once we verify and activate your pharmacy within 24 hours.</p>
     <div class="success-steps">
-      <div class="success-step"><div class="success-step-num">1</div>Check your email for a confirmation message.</div>
+      <div class="success-step"><div class="success-step-num">1</div>Your login account is ready — use the email and password you just entered.</div>
       <div class="success-step"><div class="success-step-num">2</div>We'll review and verify your pharmacy within 24 hours.</div>
-      <div class="success-step"><div class="success-step-num">3</div>Once active, log in to start adding your medicines.</div>
+      <div class="success-step"><div class="success-step-num">3</div>Once verified, log in to start adding your medicines.</div>
     </div>
     <a class="btn-home" href="index.html">← Back to homepage</a>
   </div>
@@ -228,9 +228,38 @@ async function submitForm(){
   const days=[...document.querySelectorAll('.day-btn.selected')].map(b=>b.dataset.day);
   const payload={name:document.getElementById('f-name').value.trim(),phone:document.getElementById('f-phone').value.trim(),email:document.getElementById('f-email').value.trim(),street:document.getElementById('f-street').value.trim(),suburb:document.getElementById('f-suburb').value.trim(),city:document.getElementById('f-city').value,landmark:document.getElementById('f-landmark').value.trim(),opens_at:document.getElementById('f-open').value,closes_at:document.getElementById('f-close').value,operating_days:days,offers_delivery:document.getElementById('f-delivery').checked,latitude:pinnedLat,longitude:pinnedLng};
   try{
+    // Step 1 — Save pharmacy to database
     const res=await fetch(SUPA_URL+'/rest/v1/pharmacies',{method:'POST',headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=representation'},body:JSON.stringify(payload)});
     if(!res.ok){const e=await res.json();throw new Error(e.message||'Unknown error')}
-    document.getElementById('form-card').style.display='none';document.getElementById('steps-bar').style.display='none';document.getElementById('success-screen').style.display='block';
+    const pharmacy=await res.json();
+    const pharmacyId=pharmacy[0]?.id;
+
+    // Step 2 — Create Supabase auth account for the pharmacy owner
+    const email=document.getElementById('f-email').value.trim();
+    const password=document.getElementById('f-pw').value;
+    const signupRes=await fetch(SUPA_URL+'/auth/v1/signup',{
+      method:'POST',
+      headers:{'apikey':SUPA_KEY,'Content-Type':'application/json'},
+      body:JSON.stringify({email,password})
+    });
+    const signupData=await signupRes.json();
+
+    // Step 3 — Link pharmacy_user record to the pharmacy
+    if(pharmacyId){
+      await fetch(SUPA_URL+'/rest/v1/pharmacy_users',{
+        method:'POST',
+        headers:{'apikey':SUPA_KEY,'Authorization':'Bearer '+SUPA_KEY,'Content-Type':'application/json','Prefer':'return=minimal'},
+        body:JSON.stringify({
+          pharmacy_id:pharmacyId,
+          full_name:document.getElementById('f-fullname').value.trim(),
+          role:document.getElementById('f-role').value
+        })
+      });
+    }
+
+    document.getElementById('form-card').style.display='none';
+    document.getElementById('steps-bar').style.display='none';
+    document.getElementById('success-screen').style.display='block';
   }catch(e){btn.disabled=false;btn.textContent='Submit registration';err.textContent='Submission failed: '+e.message;err.style.display='block'}
 }
 </script>
